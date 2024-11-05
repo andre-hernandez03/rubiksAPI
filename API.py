@@ -26,10 +26,10 @@ def detect():
         return jsonify({"error": "No file selected"}), 400
 
     # Save the file temporarily
-    file_path = os.path.join("uploads", file.filename)
-    file.save(file_path)
+    #file_path = os.path.join("uploads", file.filename)
+    #file.save(file_path)
 
-    image = cv2.imread(file_path)
+    image = cv2.imread('file')
 
     #image = convert_image(image_data)
 
@@ -111,3 +111,5 @@ def detect_colors(image):
 
     return layout
 
+def model(white,yellow,red,orange,green,blue):
+    return
