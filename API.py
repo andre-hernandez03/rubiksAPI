@@ -18,28 +18,20 @@ def hello():
 
 @app.route('/detect',methods=['POST'])
 def detect():
-    '''
-    data = request.json
-    image_data = data.get('image')
-    print(request.method)
-    if not image_data:
-        return jsonify({"error": "No image data provided"}), 400
-    '''
     if 'file' not in request.files:
-        return "No file part", 400
-    
+        return jsonify({"error": "No file part in the request"}), 400
+
     file = request.files['file']
     if file.filename == '':
-        return "No selected file", 400
+        return jsonify({"error": "No file selected"}), 400
 
-    # Save the file to a local directory
+    # Save the file temporarily
     file_path = os.path.join("uploads", file.filename)
     file.save(file_path)
-    
-    # Process the file as needed
-    return "File uploaded successfully", 200
 
-    image = convert_image(image_data)
+    image = cv2.imread(file_path)
+
+    #image = convert_image(image_data)
 
     # Detect colors using OpenCV
     layout = detect_colors(image)
