@@ -12,5 +12,3 @@ opencv-python==4.10.0.84
 packaging==24.1
 pillow==11.0.0
 Werkzeug==3.0.4
-scikit-image==0.20.0
-scipy==1.10.0
