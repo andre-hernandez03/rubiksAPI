@@ -63,24 +63,9 @@ color_ranges = {
     'white': [(0, 0, 200), (180, 30, 255)],
     'orange': [(10, 100, 100), (20, 255, 255)]
 }
-COLOR_LABELS = {
-    'r': [255, 0, 0],
-    'g': [0, 255, 0],
-    'b': [0, 0, 255],
-    'y': [255, 255, 0],
-    'w': [255, 255, 255],
-    'o': [255, 165, 0]
-}
 
 # Function to classify color of a region
 def classify_color(hsv_region):
-    # Calculate the Euclidean distance between the detected color and each reference color
-    distances = {color: np.linalg.norm(np.array(detected_color) - np.array(rgb))
-                 for color, rgb in COLOR_LABELS.items()}
-    # Find the color with the smallest distance
-    closest_color = min(distances, key=distances.get)
-    return closest_color
-    '''
     avg_hue = np.mean(hsv_region[:, :, 0])
     avg_saturation = np.mean(hsv_region[:, :, 1])
     avg_value = np.mean(hsv_region[:, :, 2])
@@ -92,50 +77,9 @@ def classify_color(hsv_region):
         if lower_bound[0] <= avg_hue <= upper_bound[0] and lower_bound[1] <= avg_saturation <= upper_bound[1] and lower_bound[2] <= avg_value <= upper_bound[2]:
             return color
     return 'white'  # If no color matches
-    '''
 
 # Function to detect Rubik's cube colors
-def detect_colors(image,k=6):
-    # Resize the image for consistent processing
-    image = cv2.resize(image, (300, 300))
-
-    # Convert to RGB for color processing
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    # Define dimensions for a 3x3 grid
-    height, width, _ = image.shape
-    grid_size = width // 3  # Assuming the cube face is square
-
-    piece_colors = []
-
-    # Loop through each 3x3 grid cell
-    for row in range(3):
-        row_colors = []
-        for col in range(3):
-            # Crop each cell
-            x_start = col * grid_size
-            y_start = row * grid_size
-            cell = image[y_start:y_start + grid_size, x_start:x_start + grid_size]
-
-            # Apply K-means on this cell to find dominant color
-            cell_reshaped = cell.reshape((-1, 3))
-            cell_reshaped = np.float32(cell_reshaped)
-            _, labels, centers = cv2.kmeans(cell_reshaped, k, None, 
-                                            criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2),
-                                            attempts=10, flags=cv2.KMEANS_RANDOM_CENTERS)
-
-            # Find the most dominant color in this cell
-            center_counts = np.bincount(labels.flatten())
-            dominant_color = centers[center_counts.argmax()]
-            # Convert detected color to the nearest color label
-            color_label = get_color_label(np.uint8(dominant_color).tolist())
-            row_colors.append(color_label)
-
-        piece_colors.append(row_colors)
-
-    return piece_colors
-
-    '''
+def detect_colors(image):
     # Convert image to HSV
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
@@ -168,7 +112,6 @@ def detect_colors(image,k=6):
         print(layout)
 
     return layout
-'''
     
 def model(white,yellow,red,orange,green,blue):
     return
