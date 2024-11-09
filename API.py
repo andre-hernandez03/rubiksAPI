@@ -76,7 +76,7 @@ def classify_color(hsv_region):
         upper_bound = np.array(upper)
         if lower_bound[0] <= avg_hue <= upper_bound[0] and lower_bound[1] <= avg_saturation <= upper_bound[1] and lower_bound[2] <= avg_value <= upper_bound[2]:
             return color
-    return 'unknown'  # If no color matches
+    return 'white'  # If no color matches
 
 # Function to detect Rubik's cube colors
 def detect_colors(image):
