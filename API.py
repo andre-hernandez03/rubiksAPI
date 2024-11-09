@@ -63,9 +63,24 @@ color_ranges = {
     'white': [(0, 0, 200), (180, 30, 255)],
     'orange': [(10, 100, 100), (20, 255, 255)]
 }
+COLOR_LABELS = {
+    'r': [255, 0, 0],
+    'g': [0, 255, 0],
+    'b': [0, 0, 255],
+    'y': [255, 255, 0],
+    'w': [255, 255, 255],
+    'o': [255, 165, 0]
+}
 
 # Function to classify color of a region
 def classify_color(hsv_region):
+    # Calculate the Euclidean distance between the detected color and each reference color
+    distances = {color: np.linalg.norm(np.array(detected_color) - np.array(rgb))
+                 for color, rgb in COLOR_LABELS.items()}
+    # Find the color with the smallest distance
+    closest_color = min(distances, key=distances.get)
+    return closest_color
+    '''
     avg_hue = np.mean(hsv_region[:, :, 0])
     avg_saturation = np.mean(hsv_region[:, :, 1])
     avg_value = np.mean(hsv_region[:, :, 2])
@@ -77,6 +92,7 @@ def classify_color(hsv_region):
         if lower_bound[0] <= avg_hue <= upper_bound[0] and lower_bound[1] <= avg_saturation <= upper_bound[1] and lower_bound[2] <= avg_value <= upper_bound[2]:
             return color
     return 'white'  # If no color matches
+    '''
 
 # Function to detect Rubik's cube colors
 def detect_colors(image,k=6):
