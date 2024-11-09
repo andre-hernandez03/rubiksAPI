@@ -83,9 +83,9 @@ def detect_colors(image):
     # Convert image to HSV
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    # Get image dimensions and calculate the bounding box for the cube (80% of the image)
+    # Get image dimensions and calculate the bounding box for the cube (60% of the image)
     height, width, _ = image.shape
-    side_length = int(min(height, width) * 0.8)  # 80% of the smaller dimension
+    side_length = int(min(height, width) * 0.6)  # 60% of the smaller dimension
     x_start = (width - side_length) // 2
     y_start = (height - side_length) // 2
 
