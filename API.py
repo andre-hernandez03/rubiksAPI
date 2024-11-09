@@ -60,9 +60,9 @@ color_ranges = {
     'green': [(40, 40, 40), (70, 255, 255)],
     'blue': [(90, 50, 50), (130, 255, 255)],
     'yellow': [(20, 100, 100), (30, 255, 255)],
-    'white': [(0, 0, 200), (180, 30, 255)],
     'orange': [(10, 100, 100), (20, 255, 255)]
 }
+#'white': [(0, 0, 200), (180, 30, 255)]
 
 # Function to classify color of a region
 def classify_color(hsv_region):
