@@ -96,10 +96,10 @@ def classify_color(hsv_region):
 
 # Function to detect Rubik's cube colors
 def detect_colors(image,k=6):
-    # Resize the image if needed
+    # Resize the image for consistent processing
     image = cv2.resize(image, (300, 300))
 
-    # Convert to RGB for processing
+    # Convert to RGB for color processing
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     # Define dimensions for a 3x3 grid
@@ -127,11 +127,14 @@ def detect_colors(image,k=6):
             # Find the most dominant color in this cell
             center_counts = np.bincount(labels.flatten())
             dominant_color = centers[center_counts.argmax()]
-            row_colors.append(np.uint8(dominant_color).tolist())
+            # Convert detected color to the nearest color label
+            color_label = get_color_label(np.uint8(dominant_color).tolist())
+            row_colors.append(color_label)
 
         piece_colors.append(row_colors)
 
     return piece_colors
+
     '''
     # Convert image to HSV
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
