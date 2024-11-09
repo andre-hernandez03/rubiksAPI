@@ -123,69 +123,62 @@ if __name__ == '__main__':
 import os
 import cv2
 import numpy as np
+from skimage import color
+from skimage.segmentation import slic
+from skimage.future import graph
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-# Define reference colors for the Rubik's Cube in RGB
+# Define reference colors for Rubik's Cube colors in LAB format (more robust for color matching)
 COLOR_LABELS = {
-    'red': [255, 0, 0],
-    'green': [0, 255, 0],
-    'blue': [0, 0, 255],
-    'yellow': [255, 255, 0],
-    'white': [255, 255, 255],
-    'orange': [255, 165, 0]  # Approximate RGB for orange
+    'red': color.rgb2lab(np.array([[[255, 0, 0]]], dtype=np.uint8))[0][0],
+    'green': color.rgb2lab(np.array([[[0, 255, 0]]], dtype=np.uint8))[0][0],
+    'blue': color.rgb2lab(np.array([[[0, 0, 255]]], dtype=np.uint8))[0][0],
+    'yellow': color.rgb2lab(np.array([[[255, 255, 0]]], dtype=np.uint8))[0][0],
+    'white': color.rgb2lab(np.array([[[255, 255, 255]]], dtype=np.uint8))[0][0],
+    'orange': color.rgb2lab(np.array([[[255, 165, 0]]], dtype=np.uint8))[0][0]
 }
 
 def get_color_label(detected_color):
-    # Calculate the Euclidean distance between the detected color and each reference color
-    distances = {color: np.linalg.norm(np.array(detected_color) - np.array(rgb))
-                 for color, rgb in COLOR_LABELS.items()}
+    # Calculate the Euclidean distance between the detected color and each reference color in LAB space
+    distances = {color_name: np.linalg.norm(detected_color - lab_color)
+                 for color_name, lab_color in COLOR_LABELS.items()}
+    
     # Find the color with the smallest distance
     closest_color = min(distances, key=distances.get)
     return closest_color
 
-def detect_cube_pieces(image, k=6):
-    # Resize the image for consistent processing
+def detect_cube_pieces_scikit(image):
+    # Resize for consistent processing
     image = cv2.resize(image, (300, 300))
 
-    # Convert to RGB for color processing
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # Convert image from BGR to RGB
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    # Define dimensions for a 3x3 grid
-    height, width, _ = image.shape
-    grid_size = width // 3  # Assuming the cube face is square
+    # Convert image to LAB color space for better color differentiation
+    lab_image = color.rgb2lab(image_rgb)
 
+    # Perform SLIC segmentation to divide image into regions (segments)
+    segments = slic(lab_image, n_segments=9, compactness=10, start_label=1)
+
+    # Calculate the mean LAB color of each segment and classify it
     piece_colors = []
+    for segment_value in np.unique(segments):
+        # Mask to select pixels in this segment
+        mask = segments == segment_value
+        mean_lab_color = lab_image[mask].mean(axis=0)
+        
+        # Get color label for the mean color
+        color_label = get_color_label(mean_lab_color)
+        piece_colors.append(color_label)
 
-    # Loop through each 3x3 grid cell
-    for row in range(3):
-        row_colors = []
-        for col in range(3):
-            # Crop each cell
-            x_start = col * grid_size
-            y_start = row * grid_size
-            cell = image[y_start:y_start + grid_size, x_start:x_start + grid_size]
-
-            # Apply K-means on this cell to find dominant color
-            cell_reshaped = cell.reshape((-1, 3))
-            cell_reshaped = np.float32(cell_reshaped)
-            _, labels, centers = cv2.kmeans(cell_reshaped, k, None, 
-                                            criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2),
-                                            attempts=10, flags=cv2.KMEANS_RANDOM_CENTERS)
-
-            # Find the most dominant color in this cell
-            center_counts = np.bincount(labels.flatten())
-            dominant_color = centers[center_counts.argmax()]
-            # Convert detected color to the nearest color label
-            color_label = get_color_label(np.uint8(dominant_color).tolist())
-            row_colors.append(color_label)
-
-        piece_colors.append(row_colors)
-
-    return piece_colors
+    # Reshape piece_colors list into a 3x3 grid for the Rubik's Cube face
+    piece_colors_grid = [piece_colors[i:i+3] for i in range(0, 9, 3)]
+    
+    return piece_colors_grid
 
 @app.route('/detect', methods=['POST'])
 def detect():
@@ -208,7 +201,7 @@ def detect():
             return jsonify({"error": "Failed to read image"}), 500
 
         # Detect the colors in a 3x3 grid format
-        piece_colors = detect_cube_pieces(image, k=6)
+        piece_colors = detect_cube_pieces_scikit(image)
 
         # Return the 3x3 grid of color labels as JSON
         return jsonify({"piece_colors": piece_colors})
