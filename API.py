@@ -79,7 +79,44 @@ def classify_color(hsv_region):
     return 'white'  # If no color matches
 
 # Function to detect Rubik's cube colors
-def detect_colors(image):
+def detect_colors(image,k=6):
+    # Resize the image if needed
+    image = cv2.resize(image, (300, 300))
+
+    # Convert to RGB for processing
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    # Define dimensions for a 3x3 grid
+    height, width, _ = image.shape
+    grid_size = width // 3  # Assuming the cube face is square
+
+    piece_colors = []
+
+    # Loop through each 3x3 grid cell
+    for row in range(3):
+        row_colors = []
+        for col in range(3):
+            # Crop each cell
+            x_start = col * grid_size
+            y_start = row * grid_size
+            cell = image[y_start:y_start + grid_size, x_start:x_start + grid_size]
+
+            # Apply K-means on this cell to find dominant color
+            cell_reshaped = cell.reshape((-1, 3))
+            cell_reshaped = np.float32(cell_reshaped)
+            _, labels, centers = cv2.kmeans(cell_reshaped, k, None, 
+                                            criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2),
+                                            attempts=10, flags=cv2.KMEANS_RANDOM_CENTERS)
+
+            # Find the most dominant color in this cell
+            center_counts = np.bincount(labels.flatten())
+            dominant_color = centers[center_counts.argmax()]
+            row_colors.append(np.uint8(dominant_color).tolist())
+
+        piece_colors.append(row_colors)
+
+    return piece_colors
+    '''
     # Convert image to HSV
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
@@ -112,7 +149,8 @@ def detect_colors(image):
         print(layout)
 
     return layout
-
+'''
+    
 def model(white,yellow,red,orange,green,blue):
     return
 
