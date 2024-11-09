@@ -1,4 +1,3 @@
-'''
 import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -116,98 +115,6 @@ def detect_colors(image):
     
 def model(white,yellow,red,orange,green,blue):
     return
-
-if __name__ == '__main__':
-    app.run(debug=True)
-'''
-import os
-import cv2
-import numpy as np
-from skimage import color
-from skimage.segmentation import slic
-from skimage.future import graph
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
-
-# Define reference colors for Rubik's Cube colors in LAB format (more robust for color matching)
-COLOR_LABELS = {
-    'red': color.rgb2lab(np.array([[[255, 0, 0]]], dtype=np.uint8))[0][0],
-    'green': color.rgb2lab(np.array([[[0, 255, 0]]], dtype=np.uint8))[0][0],
-    'blue': color.rgb2lab(np.array([[[0, 0, 255]]], dtype=np.uint8))[0][0],
-    'yellow': color.rgb2lab(np.array([[[255, 255, 0]]], dtype=np.uint8))[0][0],
-    'white': color.rgb2lab(np.array([[[255, 255, 255]]], dtype=np.uint8))[0][0],
-    'orange': color.rgb2lab(np.array([[[255, 165, 0]]], dtype=np.uint8))[0][0]
-}
-
-def get_color_label(detected_color):
-    # Calculate the Euclidean distance between the detected color and each reference color in LAB space
-    distances = {color_name: np.linalg.norm(detected_color - lab_color)
-                 for color_name, lab_color in COLOR_LABELS.items()}
-    
-    # Find the color with the smallest distance
-    closest_color = min(distances, key=distances.get)
-    return closest_color
-
-def detect_cube_pieces_scikit(image):
-    # Resize for consistent processing
-    image = cv2.resize(image, (300, 300))
-
-    # Convert image from BGR to RGB
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    # Convert image to LAB color space for better color differentiation
-    lab_image = color.rgb2lab(image_rgb)
-
-    # Perform SLIC segmentation to divide image into regions (segments)
-    segments = slic(lab_image, n_segments=9, compactness=10, start_label=1)
-
-    # Calculate the mean LAB color of each segment and classify it
-    piece_colors = []
-    for segment_value in np.unique(segments):
-        # Mask to select pixels in this segment
-        mask = segments == segment_value
-        mean_lab_color = lab_image[mask].mean(axis=0)
-        
-        # Get color label for the mean color
-        color_label = get_color_label(mean_lab_color)
-        piece_colors.append(color_label)
-
-    # Reshape piece_colors list into a 3x3 grid for the Rubik's Cube face
-    piece_colors_grid = [piece_colors[i:i+3] for i in range(0, 9, 3)]
-    
-    return piece_colors_grid
-
-@app.route('/detect', methods=['POST'])
-def detect():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part in the request"}), 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "No file selected"}), 400
-
-    try:
-        # Ensure the uploads directory exists
-        os.makedirs("uploads", exist_ok=True)
-        file_path = os.path.join("uploads", file.filename)
-        file.save(file_path)
-
-        # Load the saved image
-        image = cv2.imread(file_path)
-        if image is None:
-            return jsonify({"error": "Failed to read image"}), 500
-
-        # Detect the colors in a 3x3 grid format
-        piece_colors = detect_cube_pieces_scikit(image)
-
-        # Return the 3x3 grid of color labels as JSON
-        return jsonify({"piece_colors": piece_colors})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
