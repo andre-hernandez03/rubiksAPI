@@ -25,25 +25,27 @@ def detect():
     if file.filename == '':
         return jsonify({"error": "No file selected"}), 400
 
-    # Save the file temporarily
-    #file_path = os.path.join("uploads", file.filename)
-    #file.save(file_path)
+    try:
+        # Ensure the uploads directory exists
+        os.makedirs("uploads", exist_ok=True)
+        file_path = os.path.join("uploads", file.filename)
+        file.save(file_path)
 
-    image = cv2.imread('file')
+        # Verify the file was saved
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not saved"}), 500
 
-    #image = convert_image(image_data)
+        # Verify OpenCV can read the file
+        image = cv2.imread(file_path)
+        if image is None:
+            return jsonify({"error": "cv2.imread could not read the image. Check format compatibility"}), 500
 
-    # Detect colors using OpenCV
-    layout = detect_colors(image)
+        layout = detect_colors(image)
+        return jsonify({"layout": layout})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
-    return jsonify({"layout": layout})
-    
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
 
 
 # convert image for opencv
@@ -113,3 +115,6 @@ def detect_colors(image):
 
 def model(white,yellow,red,orange,green,blue):
     return
+
+if __name__ == '__main__':
+    app.run(debug=True)
