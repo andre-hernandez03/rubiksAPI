@@ -149,17 +149,17 @@ def plot_mini_cube(ax, x, y, z, face_colors):
 def get_face_color(colors, x, y, z, face):
     # Use coordinates to get the correct color from the `colors` dictionary for each face
     if face == "red" and z == 1:
-        return colors.get("red", [["red"] * 3] * 3)[2 - (y + 1)][x + 1]
+        return colors["red"][2 - (y + 1)][x + 1]
     elif face == "orange" and z == -1:
-        return colors.get("orange", [["orange"] * 3] * 3)[2 - (y + 1)][x + 1]
+        return colors["orange"][2 - (y + 1)][x + 1]
     elif face == "green" and x == -1:
-        return colors.get("green", [["green"] * 3] * 3)[2 - (y + 1)][z + 1]
+        return colors["green"][2 - (y + 1)][z + 1]
     elif face == "blue" and x == 1:
-        return colors.get("blue", [["blue"] * 3] * 3)[2 - (y + 1)][z + 1]
+        return colors["blue"][2 - (y + 1)][z + 1]
     elif face == "white" and y == 1:
-        return colors.get("white", [["white"] * 3] * 3)[2 - (z + 1)][x + 1]
+        return colors["white"][2 - (z + 1)][x + 1]
     elif face == "yellow" and y == -1:
-        return colors.get("yellow", [["yellow"] * 3] * 3)[2 - (z + 1)][x + 1]
+        return colors["yellow"][2 - (z + 1)][x + 1]
     return "grey"  # Default color for hidden faces
 
 def render_rubiks_cube(colors):
