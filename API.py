@@ -155,7 +155,7 @@ def render_cube(colors):
 @app.route('/render_cube', methods=['POST'])
 def render_cube_endpoint():
     data = request.json
-    colors = data.get('colors', {})
+    colors = data.get('cubeLayouts', {})
 
     # Render the cube and get the image in a buffer
     img_buf = render_cube(colors)
