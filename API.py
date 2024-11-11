@@ -154,16 +154,16 @@ def plot_mini_cube(ax, x, y, z, face_colors):
 
 def get_face_color(colors, x, y, z, face):
     # Use coordinates to get the correct color from the `colors` dictionary for each face
-    if face == "white" and z == 1:
+    if face == "yellow" and z == 1:
+        return colors["yellow"][2 - (y + 1)][x + 1]
+    elif face == "white" and z == -1:
         return colors["white"][2 - (y + 1)][x + 1]
-    elif face == "yellow" and z == -1:
-        return colors["orange"][2 - (y + 1)][x + 1]
     elif face == "green" and x == -1:
         return colors["green"][2 - (y + 1)][z + 1]
     elif face == "blue" and x == 1:
         return colors["blue"][2 - (y + 1)][z + 1]
     elif face == "orange" and y == 1:
-        return colors["white"][2 - (z + 1)][x + 1]
+        return colors["orange"][2 - (z + 1)][x + 1]
     elif face == "red" and y == -1:
         return colors["red"][2 - (z + 1)][x + 1]
     return "grey"  # Default color for hidden faces
