@@ -136,6 +136,9 @@ def rotate_face_90_clockwise(face):
 def rotate_face_90_counterclockwise(face):
     return rotate_face_90_clockwise(rotate_face_90_clockwise(rotate_face_90_clockwise(face)))
 
+def flip_columns(face):
+    return [row[::-1] for row in face]
+
 def plot_mini_cube(ax, x, y, z, face_colors):
     # Define vertices for each face of a mini-cube
     faces = [
@@ -161,7 +164,9 @@ def get_face_color(colors, x, y, z, face):
     elif face == "blue" and x == -1:
         return colors["blue"][2 - (y + 1)][z + 1]
     elif face == "green" and x == 1:
-        return colors["green"][2 - (y + 1)][z + 1]
+        right_face = rotate_face_90_counter_clockwise(colors["green"])  # 90° clockwise rotation
+        right_face = flip_columns(right_face)  # Flip columns after rotation
+        return right_face[2 - (y + 1)][z + 1]
     elif face == "orange" and y == 1:
         return colors["orange"][2 - (z + 1)][x + 1]
     elif face == "red" and y == -1:
