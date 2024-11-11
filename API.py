@@ -180,8 +180,8 @@ def render_rubiks_cube(colors):
 
                 # Define the color of each face for this mini-cube
                 face_colors = [
-                    get_face_color(colors, x, y, z, "white"),  # z+ face
-                    get_face_color(colors, x, y, z, "yellow"),   # z- face
+                    get_face_color(colors, x, y, z, "yellow"),  # z+ face
+                    get_face_color(colors, x, y, z, "white"),   # z- face
                     get_face_color(colors, x, y, z, "orange"),    # y+ face
                     get_face_color(colors, x, y, z, "red"), # y- face
                     get_face_color(colors, x, y, z, "blue"),  # x+ face
