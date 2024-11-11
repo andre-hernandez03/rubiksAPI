@@ -113,8 +113,50 @@ def detect_colors(image):
 
     return layout
     
-def model(white,yellow,red,orange,green,blue):
-    return
+# Define colors for the cube faces
+COLOR_MAP = {
+    'blue': [0, 0, 1],
+    'green': [0, 1, 0],
+    'red': [1, 0, 0],
+    'yellow': [1, 1, 0],
+    'white': [1, 1, 1],
+    'orange': [1, 0.5, 0],
+    'grey': [0.5, 0.5, 0.5],  # Default color for hidden faces
+}
+
+def render_cube(colors):
+    plotter = pv.Plotter(off_screen=True)
+    plotter.background_color = 'white'
+
+    # Create the 3x3x3 Rubik's cube as individual blocks
+    for x in range(-1, 2):
+        for y in range(-1, 2):
+            for z in range(-1, 2):
+                if x == 0 and y == 0 and z == 0:
+                    continue  # Skip the center cube
+
+                block = pv.Cube(center=(x, y, z), x_length=0.9, y_length=0.9, z_length=0.9)
+                # Apply color to the block based on the position
+                block_color = COLOR_MAP.get(colors.get((x, y, z), 'grey'))
+                plotter.add_mesh(block, color=block_color, show_edges=True)
+
+    # Render to an image
+    img_array = plotter.screenshot(return_img=True)
+    img = Image.fromarray(img_array)
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    buf.seek(0)
+    return buf
+
+@app.route('/render_cube', methods=['POST'])
+def render_cube_endpoint():
+    data = request.json
+    colors = data.get('colors', {})
+
+    # Render the cube and get the image in a buffer
+    img_buf = render_cube(colors)
+    return send_file(img_buf, mimetype='image/png')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
