@@ -1,11 +1,13 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 import base64
-from io import BytesIO
 from PIL import Image
 import numpy as np
 import cv2
+import pyvista as pv
+import io
+
 
 
 # Flask/ Server
@@ -51,7 +53,7 @@ def detect():
 # convert image for opencv
 def convert_image(base64_str):
     decoded = base64.b64decode(base64_str)
-    img = Image.open(BytesIO(decoded))
+    img = Image.open(io.BytesIO(decoded))
     return np.array(img)
 
 # Define color ranges
