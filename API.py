@@ -8,7 +8,9 @@ import cv2
 import pyvista as pv
 import io
 
-
+os.environ["DISPLAY"] = ":0"         # Avoids X server errors
+os.environ["PYVISTA_OFF_SCREEN"] = "true"  # Ensures PyVista stays off-screen
+os.environ["PYVISTA_USE_IPYVTK"] = "false" # Disables IPython-specific rendering
 
 # Flask/ Server
 app = Flask(__name__)
