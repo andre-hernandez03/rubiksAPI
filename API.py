@@ -130,6 +130,12 @@ COLOR_MAP = {
     "grey": "grey"  # Default color for hidden/empty faces
 }
 
+def rotate_face_90_clockwise(face):
+    return [list(reversed(col)) for col in zip(*face)]
+
+def rotate_face_90_counterclockwise(face):
+    return rotate_face_90_clockwise(rotate_face_90_clockwise(rotate_face_90_clockwise(face)))
+
 def plot_mini_cube(ax, x, y, z, face_colors):
     # Define vertices for each face of a mini-cube
     faces = [
@@ -159,6 +165,8 @@ def get_face_color(colors, x, y, z, face):
     elif face == "orange" and y == 1:
         return colors["white"][2 - (z + 1)][x + 1]
     elif face == "red" and y == -1:
+        rotate_face_90_counterclockwise(face)
+        rotate_face_90_counterclockwise(face)
         return colors["red"][2 - (z + 1)][x + 1]
     return "grey"  # Default color for hidden faces
 
