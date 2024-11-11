@@ -7,11 +7,9 @@ import numpy as np
 import cv2
 import pyvista as pv
 import io
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-os.environ["DISPLAY"] = ":0"         # Avoids X server errors
-os.environ["PYVISTA_OFF_SCREEN"] = "true"  # Ensures PyVista stays off-screen
-os.environ["PYVISTA_USE_IPYVTK"] = "false" # Disables IPython-specific rendering
-os.environ["VTK_DEFAULT_RENDER_WINDOW_OFFSCREEN"] = "1"  # Use VTK off-screen mode
 
 
 # Flask/ Server
@@ -119,50 +117,77 @@ def detect_colors(image):
 
     return layout
     
-# Define colors for the cube faces
+
+
+# Define the colors for each face of the cube
 COLOR_MAP = {
-    'blue': [0, 0, 1],
-    'green': [0, 1, 0],
-    'red': [1, 0, 0],
-    'yellow': [1, 1, 0],
-    'white': [1, 1, 1],
-    'orange': [1, 0.5, 0],
-    'grey': [0.5, 0.5, 0.5],  # Default color for hidden faces
+    "blue": "blue",
+    "green": "green",
+    "red": "red",
+    "yellow": "yellow",
+    "white": "white",
+    "orange": "orange",
+    "grey": "grey"  # Default color for hidden/empty faces
 }
 
-def render_cube(colors):
-    plotter = pv.Plotter(off_screen=True)
-    plotter.background_color = 'white'
+def render_rubiks_cube(colors):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection="3d")
 
-    # Create the 3x3x3 Rubik's cube as individual blocks
-    for x in range(-1, 2):
-        for y in range(-1, 2):
-            for z in range(-1, 2):
-                if x == 0 and y == 0 and z == 0:
-                    continue  # Skip the center cube
+    # Define the positions and colors for each mini-cube's face
+    cube_positions = [
+        # Each tuple: (x, y, z, face_colors), face_colors order: +z, -z, +y, -y, +x, -x
+        (-1, -1, -1, ["blue", "grey", "white", "grey", "grey", "orange"]),
+        (0, -1, -1, ["blue", "grey", "white", "grey", "grey", "grey"]),
+        (1, -1, -1, ["blue", "grey", "white", "grey", "red", "grey"]),
+        # ... add positions for all 26 visible mini-cubes
+    ]
 
-                block = pv.Cube(center=(x, y, z), x_length=0.9, y_length=0.9, z_length=0.9)
-                # Apply color to the block based on the position
-                block_color = COLOR_MAP.get(colors.get((x, y, z), 'grey'))
-                plotter.add_mesh(block, color=block_color, show_edges=True)
+    # Plot each mini-cube
+    for x, y, z, face_colors in cube_positions:
+        plot_mini_cube(ax, x, y, z, face_colors)
 
-    # Render to an image
-    img_array = plotter.screenshot(return_img=True)
-    img = Image.fromarray(img_array)
+    # Adjust plot settings for appearance
+    ax.set_box_aspect([1, 1, 1])  # Equal aspect ratio
+    ax.axis("off")  # Turn off the axis
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+
+    # Save the plot to a BytesIO buffer
     buf = io.BytesIO()
-    img.save(buf, format='PNG')
+    plt.savefig(buf, format="png", bbox_inches="tight", pad_inches=0)
     buf.seek(0)
+    plt.close(fig)  # Close the plot to free memory
+
     return buf
+
+def plot_mini_cube(ax, x, y, z, face_colors):
+    # Define mini-cube vertices for each face
+    faces = [
+        # z+ face
+        [[x-0.5, y-0.5, z+0.5], [x+0.5, y-0.5, z+0.5], [x+0.5, y+0.5, z+0.5], [x-0.5, y+0.5, z+0.5]],
+        # z- face
+        [[x-0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x-0.5, y+0.5, z-0.5]],
+        # y+ face
+        [[x-0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z+0.5], [x-0.5, y+0.5, z+0.5]],
+        # y- face
+        [[x-0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z+0.5], [x-0.5, y-0.5, z+0.5]],
+        # x+ face
+        [[x+0.5, y-0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z+0.5], [x+0.5, y-0.5, z+0.5]],
+        # x- face
+        [[x-0.5, y-0.5, z-0.5], [x-0.5, y+0.5, z-0.5], [x-0.5, y+0.5, z+0.5], [x-0.5, y-0.5, z+0.5]],
+    ]
+
+    # Add each face of the mini-cube to the plot
+    for i, face in enumerate(faces):
+        color = COLOR_MAP.get(face_colors[i], "grey")  # Get color or default to grey
+        poly3d = [face]
+        ax.add_collection3d(Poly3DCollection(poly3d, color=color, edgecolor="black"))
 
 @app.route('/render_cube', methods=['POST'])
 def render_cube_endpoint():
-    data = request.json
-    colors = data.get('cubeLayouts', {})
-
-    # Render the cube and get the image in a buffer
-    img_buf = render_cube(colors)
+    colors = request.json.get("colors", {})  # Get colors from JSON payload
+    img_buf = render_rubiks_cube(colors)
     return send_file(img_buf, mimetype='image/png')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
