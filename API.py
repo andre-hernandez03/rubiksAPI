@@ -185,7 +185,7 @@ def plot_mini_cube(ax, x, y, z, face_colors):
 
 @app.route('/render_cube', methods=['POST'])
 def render_cube_endpoint():
-    colors = request.json.get("colors", {})  # Get colors from JSON payload
+    colors = request.json.get("cubeLayouts", {})  # Get colors from JSON payload
     img_buf = render_rubiks_cube(colors)
     return send_file(img_buf, mimetype='image/png')
 
