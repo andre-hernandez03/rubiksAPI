@@ -130,62 +130,73 @@ COLOR_MAP = {
     "grey": "grey"  # Default color for hidden/empty faces
 }
 
+def plot_mini_cube(ax, x, y, z, face_colors):
+    # Define vertices for each face of a mini-cube
+    faces = [
+        [[x-0.5, y-0.5, z+0.5], [x+0.5, y-0.5, z+0.5], [x+0.5, y+0.5, z+0.5], [x-0.5, y+0.5, z+0.5]],  # z+ face
+        [[x-0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x-0.5, y+0.5, z-0.5]],  # z- face
+        [[x-0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z+0.5], [x-0.5, y+0.5, z+0.5]],  # y+ face
+        [[x-0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z+0.5], [x-0.5, y-0.5, z+0.5]],  # y- face
+        [[x+0.5, y-0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z+0.5], [x+0.5, y-0.5, z+0.5]],  # x+ face
+        [[x-0.5, y-0.5, z-0.5], [x-0.5, y+0.5, z-0.5], [x-0.5, y+0.5, z+0.5], [x-0.5, y-0.5, z+0.5]],  # x- face
+    ]
+
+    for i, face in enumerate(faces):
+        color = COLOR_MAP.get(face_colors[i], "grey")
+        poly3d = [face]
+        ax.add_collection3d(Poly3DCollection(poly3d, color=color, edgecolor="black"))
+
+def get_face_color(colors, x, y, z, face):
+    # Use coordinates to get the correct color from the `colors` dictionary for each face
+    if face == "red" and z == 1:
+        return colors.get("red", [["grey"] * 3] * 3)[2 - (y + 1)][x + 1]
+    elif face == "orange" and z == -1:
+        return colors.get("orange", [["grey"] * 3] * 3)[2 - (y + 1)][x + 1]
+    elif face == "green" and x == -1:
+        return colors.get("left", [["grey"] * 3] * 3)[2 - (y + 1)][z + 1]
+    elif face == "blue" and x == 1:
+        return colors.get("blue", [["grey"] * 3] * 3)[2 - (y + 1)][z + 1]
+    elif face == "white" and y == 1:
+        return colors.get("white", [["grey"] * 3] * 3)[2 - (z + 1)][x + 1]
+    elif face == "yellow" and y == -1:
+        return colors.get("yellow", [["grey"] * 3] * 3)[2 - (z + 1)][x + 1]
+    return "grey"  # Default color for hidden faces
+
 def render_rubiks_cube(colors):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
 
-    # Define the positions and colors for each mini-cube's face
-    cube_positions = [
-        # Each tuple: (x, y, z, face_colors), face_colors order: +z, -z, +y, -y, +x, -x
-        (-1, -1, -1, ["blue", "grey", "white", "grey", "grey", "orange"]),
-        (0, -1, -1, ["blue", "grey", "white", "grey", "grey", "grey"]),
-        (1, -1, -1, ["blue", "grey", "white", "grey", "red", "grey"]),
-        # ... add positions for all 26 visible mini-cubes
-    ]
+    for x in range(-1, 2):
+        for y in range(-1, 2):
+            for z in range(-1, 2):
+                if x == 0 and y == 0 and z == 0:
+                    continue  # Skip the center mini-cube
 
-    # Plot each mini-cube
-    for x, y, z, face_colors in cube_positions:
-        plot_mini_cube(ax, x, y, z, face_colors)
+                # Define the color of each face for this mini-cube
+                face_colors = [
+                    get_face_color(colors, x, y, z, "red"),  # z+ face
+                    get_face_color(colors, x, y, z, "orange"),   # z- face
+                    get_face_color(colors, x, y, z, "white"),    # y+ face
+                    get_face_color(colors, x, y, z, "yellow"), # y- face
+                    get_face_color(colors, x, y, z, "blue"),  # x+ face
+                    get_face_color(colors, x, y, z, "green")    # x- face
+                ]
 
-    # Adjust plot settings for appearance
-    ax.set_box_aspect([1, 1, 1])  # Equal aspect ratio
-    ax.axis("off")  # Turn off the axis
+                plot_mini_cube(ax, x, y, z, face_colors)
+
+    ax.set_box_aspect([1, 1, 1])
+    ax.axis("off")
     plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
-    # Save the plot to a BytesIO buffer
     buf = io.BytesIO()
     plt.savefig(buf, format="png", bbox_inches="tight", pad_inches=0)
     buf.seek(0)
-    plt.close(fig)  # Close the plot to free memory
-
+    plt.close(fig)
     return buf
-
-def plot_mini_cube(ax, x, y, z, face_colors):
-    # Define mini-cube vertices for each face
-    faces = [
-        # z+ face
-        [[x-0.5, y-0.5, z+0.5], [x+0.5, y-0.5, z+0.5], [x+0.5, y+0.5, z+0.5], [x-0.5, y+0.5, z+0.5]],
-        # z- face
-        [[x-0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x-0.5, y+0.5, z-0.5]],
-        # y+ face
-        [[x-0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z+0.5], [x-0.5, y+0.5, z+0.5]],
-        # y- face
-        [[x-0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z-0.5], [x+0.5, y-0.5, z+0.5], [x-0.5, y-0.5, z+0.5]],
-        # x+ face
-        [[x+0.5, y-0.5, z-0.5], [x+0.5, y+0.5, z-0.5], [x+0.5, y+0.5, z+0.5], [x+0.5, y-0.5, z+0.5]],
-        # x- face
-        [[x-0.5, y-0.5, z-0.5], [x-0.5, y+0.5, z-0.5], [x-0.5, y+0.5, z+0.5], [x-0.5, y-0.5, z+0.5]],
-    ]
-
-    # Add each face of the mini-cube to the plot
-    for i, face in enumerate(faces):
-        color = COLOR_MAP.get(face_colors[i], "grey")  # Get color or default to grey
-        poly3d = [face]
-        ax.add_collection3d(Poly3DCollection(poly3d, color=color, edgecolor="black"))
 
 @app.route('/render_cube', methods=['POST'])
 def render_cube_endpoint():
-    colors = request.json.get("cubeLayouts", {})  # Get colors from JSON payload
+    colors = request.json.get("cubeLayouts", {})
     img_buf = render_rubiks_cube(colors)
     return send_file(img_buf, mimetype='image/png')
 
