@@ -165,8 +165,6 @@ def get_face_color(colors, x, y, z, face):
     elif face == "orange" and y == 1:
         return colors["white"][2 - (z + 1)][x + 1]
     elif face == "red" and y == -1:
-        rotate_face_90_counterclockwise(face)
-        rotate_face_90_counterclockwise(face)
         return colors["red"][2 - (z + 1)][x + 1]
     return "grey"  # Default color for hidden faces
 
