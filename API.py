@@ -158,10 +158,10 @@ def get_face_color(colors, x, y, z, face):
         return colors["yellow"][2 - (y + 1)][x + 1]
     elif face == "white" and z == -1:
         return colors["white"][2 - (y + 1)][x + 1]
-    elif face == "green" and x == -1:
-        return colors["green"][2 - (y + 1)][z + 1]
-    elif face == "blue" and x == 1:
+    elif face == "blue" and x == -1:
         return colors["blue"][2 - (y + 1)][z + 1]
+    elif face == "green" and x == 1:
+        return colors["green"][2 - (y + 1)][z + 1]
     elif face == "orange" and y == 1:
         return colors["orange"][2 - (z + 1)][x + 1]
     elif face == "red" and y == -1:
@@ -184,8 +184,8 @@ def render_rubiks_cube(colors):
                     get_face_color(colors, x, y, z, "white"),   # z- face
                     get_face_color(colors, x, y, z, "orange"),    # y+ face
                     get_face_color(colors, x, y, z, "red"), # y- face
-                    get_face_color(colors, x, y, z, "blue"),  # x+ face
-                    get_face_color(colors, x, y, z, "green")    # x- face
+                    get_face_color(colors, x, y, z, "green"),  # x+ face
+                    get_face_color(colors, x, y, z, "blue")    # x- face
                 ]
 
                 plot_mini_cube(ax, x, y, z, face_colors)
