@@ -164,7 +164,7 @@ def get_face_color(colors, x, y, z, face):
     elif face == "blue" and x == -1:
         return colors["blue"][2 - (y + 1)][z + 1]
     elif face == "green" and x == 1:
-        right_face = rotate_face_90_counter_clockwise(colors["green"])  # 90° clockwise rotation
+        right_face = rotate_face_90_counterclockwise(colors["green"])  # 90° clockwise rotation
         right_face = flip_columns(right_face)  # Flip columns after rotation
         return right_face[2 - (y + 1)][z + 1]
     elif face == "orange" and y == 1:
