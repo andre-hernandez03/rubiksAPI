@@ -197,6 +197,7 @@ def render_rubiks_cube(colors):
 @app.route('/render_cube', methods=['POST'])
 def render_cube_endpoint():
     colors = request.json.get("cubeLayouts", {})
+    print(colors)
     img_buf = render_rubiks_cube(colors)
     return send_file(img_buf, mimetype='image/png')
 
