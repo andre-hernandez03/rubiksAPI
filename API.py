@@ -252,7 +252,7 @@ def rotate():
         'colors': colors
     }), 200
 
-
+'''
 # Front face clockwise
 def ff(colors):
     temp_redface = colors.get('red')
@@ -434,6 +434,99 @@ def rf(colors):
         for c in range(3):
             colors['green'][r][c] = temp_greenface[r][c]
 
+'''
+def rotate_face_90_clockwise(face):
+    """Rotate a 3x3 face 90 degrees clockwise."""
+    return [list(reversed(col)) for col in zip(*face)]
+
+
+def rotate_face_90_counterclockwise(face):
+    """Rotate a 3x3 face 90 degrees counterclockwise."""
+    return rotate_face_90_clockwise(rotate_face_90_clockwise(rotate_face_90_clockwise(face)))
+
+
+def ff(colors):
+    """Rotate the front (red) face clockwise."""
+    colors['red'] = rotate_face_90_clockwise(colors['red'])
+    temp_yellow_row = colors['yellow'][2]
+    temp_blue_col = [row[2] for row in colors['blue']]
+    temp_white_row = colors['white'][0]
+    temp_green_col = [row[0] for row in colors['green']]
+    colors['yellow'][2] = temp_green_col[::-1]
+    for i in range(3):
+        colors['blue'][i][2] = temp_yellow_row[i]
+    colors['white'][0] = temp_blue_col[::-1]
+    for i in range(3):
+        colors['green'][i][0] = temp_white_row[i]
+
+
+def bf(colors):
+    """Rotate the back (orange) face clockwise."""
+    colors['orange'] = rotate_face_90_clockwise(colors['orange'])
+    temp_yellow_row = colors['yellow'][0]
+    temp_green_col = [row[2] for row in colors['green']]
+    temp_white_row = colors['white'][2]
+    temp_blue_col = [row[0] for row in colors['blue']]
+    colors['yellow'][0] = temp_blue_col[::-1]
+    for i in range(3):
+        colors['green'][i][2] = temp_yellow_row[i]
+    colors['white'][2] = temp_green_col[::-1]
+    for i in range(3):
+        colors['blue'][i][0] = temp_white_row[i]
+
+
+def lf(colors):
+    """Rotate the left (blue) face clockwise."""
+    colors['blue'] = rotate_face_90_clockwise(colors['blue'])
+    temp_white_col = [row[0] for row in colors['white']]
+    temp_red_col = [row[0] for row in colors['red']]
+    temp_yellow_col = [row[0] for row in colors['yellow']][::-1]
+    temp_orange_col = [row[2] for row in colors['orange']]
+    for i in range(3):
+        colors['white'][i][0] = temp_orange_col[i]
+        colors['red'][i][0] = temp_white_col[i]
+        colors['yellow'][2 - i][0] = temp_red_col[i]
+        colors['orange'][i][2] = temp_yellow_col[i]
+
+
+def rf(colors):
+    """Rotate the right (green) face clockwise."""
+    colors['green'] = rotate_face_90_clockwise(colors['green'])
+    temp_white_col = [row[2] for row in colors['white']]
+    temp_red_col = [row[2] for row in colors['red']]
+    temp_yellow_col = [row[2] for row in colors['yellow']][::-1]
+    temp_orange_col = [row[0] for row in colors['orange']]
+    for i in range(3):
+        colors['white'][i][2] = temp_red_col[i]
+        colors['red'][i][2] = temp_yellow_col[i]
+        colors['yellow'][2 - i][2] = temp_orange_col[i]
+        colors['orange'][i][0] = temp_white_col[i]
+
+
+def tf(colors):
+    """Rotate the top (yellow) face clockwise."""
+    colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
+    temp_red_row = colors['red'][0]
+    temp_blue_row = colors['blue'][0]
+    temp_orange_row = colors['orange'][0]
+    temp_green_row = colors['green'][0]
+    colors['red'][0] = temp_blue_row
+    colors['green'][0] = temp_red_row
+    colors['orange'][0] = temp_green_row
+    colors['blue'][0] = temp_orange_row
+
+
+def bof(colors):
+    """Rotate the bottom (white) face clockwise."""
+    colors['white'] = rotate_face_90_clockwise(colors['white'])
+    temp_red_row = colors['red'][2]
+    temp_green_row = colors['green'][2]
+    temp_orange_row = colors['orange'][2]
+    temp_blue_row = colors['blue'][2]
+    colors['red'][2] = temp_green_row
+    colors['green'][2] = temp_orange_row
+    colors['orange'][2] = temp_blue_row
+    colors['blue'][2] = temp_red_row
 
 
 # COUNTER CLOCKWISE ROTATIONS
@@ -612,7 +705,6 @@ def bof_ccw(colors):
     for r in range(3):
         for c in range(3):
             colors['white'][r][c] = temp_whiteface[r][c]
-
 
 if __name__ == '__main__':
     app.run(debug=True)
