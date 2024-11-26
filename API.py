@@ -447,19 +447,22 @@ def rotate_face_90_counterclockwise(face):
 
 def ff(colors):
     """Rotate the front (red) face clockwise."""
+    # Rotate the red face (front) clockwise
     colors['red'] = rotate_face_90_clockwise(colors['red'])
 
-    temp_yellow_row = colors['yellow'][2]
-    temp_blue_col = [row[2] for row in colors['blue']]
-    temp_white_row = colors['white'][0]
-    temp_green_col = [row[0] for row in colors['green']]
+    # Temporary values for adjacent faces
+    temp_yellow_row = colors['yellow'][2]  # Bottom row of yellow (top face)
+    temp_green_col = [row[0] for row in colors['green']]  # First column of green (right face)
+    temp_white_row = colors['white'][0]  # Top row of white (bottom face)
+    temp_blue_col = [row[2] for row in colors['blue']]  # Third column of blue (left face)
 
-    colors['yellow'][2] = temp_green_col[::-1]
+    # Update adjacent faces
     for i in range(3):
-        colors['blue'][i][2] = temp_yellow_row[i]
-    colors['white'][0] = temp_blue_col[::-1]
+        colors['green'][i][0] = temp_yellow_row[i]  # First column of green gets bottom row of yellow
+    colors['white'][0] = temp_green_col[::-1]  # Top row of white gets reversed first column of green
     for i in range(3):
-        colors['green'][i][0] = temp_white_row[i]
+        colors['blue'][i][2] = temp_white_row[i]  # Third column of blue gets top row of white
+    colors['yellow'][2] = temp_blue_col[::-1]  # Bottom 
 
 
 def bf(colors):
