@@ -647,5 +647,77 @@ def bof_ccw(colors):
     colors['orange'][2] = temp_green_row
     colors['green'][2] = temp_red_row
 
+def create_scramble():
+    """Generate a scramble sequence for a Rubik's Cube with random moves."""
+    num_moves = random.randint(20, 60)  # Random number of moves between 20 and 60
+    faces = ['F', 'B', 'L', 'R', 'U', 'D']  # Front, Back, Left, Right, Up, Down
+    modifiers = ['', "'", '2']  # '', ' means clockwise, "' means counterclockwise, '2' means double turn
+    
+    scramble = []
+    for _ in range(num_moves):
+        move = random.choice(faces) + random.choice(modifiers)
+        scramble.append(move)
+    
+    return ' '.join(scramble)
+
+
+def apply_scramble(colors, scramble):
+    """Apply a scramble sequence to the cube."""
+    scramble_moves = scramble.split()
+    for move in scramble_moves:
+        if move == "F":
+            ff(colors)
+        elif move == "F'":
+            ff_counter(colors)
+        elif move == "F2":
+            ff(colors)
+            ff(colors)
+        elif move == "B":
+            bf(colors)
+        elif move == "B'":
+            bf_counter(colors)
+        elif move == "B2":
+            bf(colors)
+            bf(colors)
+        elif move == "L":
+            lf(colors)
+        elif move == "L'":
+            lf_counter(colors)
+        elif move == "L2":
+            lf(colors)
+            lf(colors)
+        elif move == "R":
+            rf(colors)
+        elif move == "R'":
+            rf_counter(colors)
+        elif move == "R2":
+            rf(colors)
+            rf(colors)
+        elif move == "U":
+            tf(colors)
+        elif move == "U'":
+            tf_counter(colors)
+        elif move == "U2":
+            tf(colors)
+            tf(colors)
+        elif move == "D":
+            bof(colors)
+        elif move == "D'":
+            bof_counter(colors)
+        elif move == "D2":
+            bof(colors)
+            bof(colors)
+    return colors
+
+@app.route('/scramble',methods=['POST'])
+def scramble():
+    create_scramble()
+    apply_scramble(colors,scramble)
+    img_buf = render_rubiks_cube(colors)
+    img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
+    return jsonify({
+        'colors': colors
+    }), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
