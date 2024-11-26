@@ -546,180 +546,100 @@ def bof(colors):
 
 # COUNTER CLOCKWISE ROTATIONS
 
-# Front face counterclockwise
 def ff_ccw(colors):
-    temp_redface = colors.get('red')
-    temp_blueface = colors.get('blue')
-    temp_greenface = colors.get('green')
-    temp_yellowface = colors.get('yellow')
-    temp_whiteface = colors.get('white')
+    """Rotate the front (red) face counterclockwise."""
+    colors['red'] = rotate_face_90_counterclockwise(colors['red'])
 
-    # Rotate the front face counterclockwise
-    for r in range(3):
-        for c in range(3):
-            temp_redface[r][c] = colors.get('red')[c][3-1-r]
+    temp_yellow_row = colors['yellow'][2]
+    temp_blue_col = [row[2] for row in colors['blue']]
+    temp_white_row = colors['white'][0]
+    temp_green_col = [row[0] for row in colors['green']]
 
-    # Adjust adjacent faces
-    temp_yellow_row = [colors['yellow'][2][c] for c in range(3)]
-    temp_blue_col = [colors['blue'][r][2] for r in range(3)]
-    temp_white_row = [colors['white'][0][c] for c in range(3)]
-    temp_green_col = [colors['green'][r][0] for r in range(3)]
+    colors['yellow'][2] = temp_green_col[::-1]
+    for i in range(3):
+        colors['blue'][i][2] = temp_white_row[i]
+    colors['white'][0] = temp_blue_col[::-1]
+    for i in range(3):
+        colors['green'][i][0] = temp_yellow_row[i]
 
-    for c in range(3):
-        colors['yellow'][2][c] = temp_blue_col[c]
-        colors['blue'][c][2] = temp_white_row[2-c]
-        colors['white'][0][c] = temp_green_col[c]
-        colors['green'][c][0] = temp_yellow_row[2-c]
-
-    # Update the front face
-    for r in range(3):
-        for c in range(3):
-            colors['red'][r][c] = temp_redface[r][c]
 
 def bf_ccw(colors):
-    temp_orangeface = colors.get('orange')
-    temp_blueface = colors.get('blue')
-    temp_greenface = colors.get('green')
-    temp_yellowface = colors.get('yellow')
-    temp_whiteface = colors.get('white')
+    """Rotate the back (orange) face counterclockwise."""
+    colors['orange'] = rotate_face_90_counterclockwise(colors['orange'])
 
-    # Rotate the back face counterclockwise
-    for r in range(3):
-        for c in range(3):
-            temp_orangeface[r][c] = colors.get('orange')[c][3-1-r]
+    temp_yellow_row = colors['yellow'][0]
+    temp_green_col = [row[2] for row in colors['green']]
+    temp_white_row = colors['white'][2]
+    temp_blue_col = [row[0] for row in colors['blue']]
 
-    # Adjust adjacent faces
-    temp_yellow_row = [colors['yellow'][0][c] for c in range(3)]
-    temp_blue_col = [colors['blue'][r][0] for r in range(3)]
-    temp_white_row = [colors['white'][2][c] for c in range(3)]
-    temp_green_col = [colors['green'][r][2] for r in range(3)]
+    colors['yellow'][0] = temp_green_col[::-1]
+    for i in range(3):
+        colors['green'][i][2] = temp_white_row[i]
+    colors['white'][2] = temp_blue_col[::-1]
+    for i in range(3):
+        colors['blue'][i][0] = temp_yellow_row[i]
 
-    for c in range(3):
-        colors['yellow'][0][c] = temp_green_col[c]
-        colors['blue'][c][0] = temp_yellow_row[2-c]
-        colors['white'][2][c] = temp_blue_col[c]
-        colors['green'][c][2] = temp_white_row[2-c]
-
-    # Update the back face
-    for r in range(3):
-        for c in range(3):
-            colors['orange'][r][c] = temp_orangeface[r][c]
-
-def rf_ccw(colors):
-    temp_greenface = colors.get('green')
-    temp_redface = colors.get('red')
-    temp_yellowface = colors.get('yellow')
-    temp_orangeface = colors.get('orange')
-    temp_whiteface = colors.get('white')
-
-    # Rotate the right face counterclockwise
-    for r in range(3):
-        for c in range(3):
-            temp_greenface[r][c] = colors.get('green')[c][3-1-r]
-
-    # Adjust adjacent faces
-    temp_white_col = [colors['white'][r][2] for r in range(3)]
-    temp_red_col = [colors['red'][r][2] for r in range(3)]
-    temp_yellow_col = [colors['yellow'][2-r][2] for r in range(3)]
-    temp_orange_col = [colors['orange'][r][0] for r in range(3)]
-
-    for r in range(3):
-        colors['white'][r][2] = temp_orange_col[r]
-        colors['red'][r][2] = temp_white_col[r]
-        colors['yellow'][2-r][2] = temp_red_col[r]
-        colors['orange'][r][0] = temp_yellow_col[r]
-
-    # Update the right face
-    for r in range(3):
-        for c in range(3):
-            colors['green'][r][c] = temp_greenface[r][c]
 
 def lf_ccw(colors):
-    temp_blueface = colors.get('blue')
-    temp_redface = colors.get('red')
-    temp_yellowface = colors.get('yellow')
-    temp_orangeface = colors.get('orange')
-    temp_whiteface = colors.get('white')
+    """Rotate the left (blue) face counterclockwise."""
+    colors['blue'] = rotate_face_90_counterclockwise(colors['blue'])
 
-    # Rotate the left face counterclockwise
-    for r in range(3):
-        for c in range(3):
-            temp_blueface[r][c] = colors.get('blue')[c][3-1-r]
+    temp_yellow_col = [row[0] for row in colors['yellow']]
+    temp_orange_col = [row[2] for row in colors['orange']]
+    temp_white_col = [row[0] for row in colors['white']]
+    temp_red_col = [row[0] for row in colors['red']]
 
-    # Adjust adjacent faces
-    temp_white_col = [colors['white'][r][0] for r in range(3)]
-    temp_red_col = [colors['red'][r][0] for r in range(3)]
-    temp_yellow_col = [colors['yellow'][2-r][0] for r in range(3)]
-    temp_orange_col = [colors['orange'][r][2] for r in range(3)]
+    for i in range(3):
+        colors['yellow'][i][0] = temp_red_col[i]
+        colors['orange'][i][2] = temp_yellow_col[2 - i]
+        colors['white'][i][0] = temp_orange_col[i]
+        colors['red'][i][0] = temp_white_col[i]
 
-    for r in range(3):
-        colors['white'][r][0] = temp_red_col[r]
-        colors['red'][r][0] = temp_yellow_col[2-r]
-        colors['yellow'][2-r][0] = temp_orange_col[r]
-        colors['orange'][r][2] = temp_white_col[r]
 
-    # Update the left face
-    for r in range(3):
-        for c in range(3):
-            colors['blue'][r][c] = temp_blueface[r][c]
+def rf_ccw(colors):
+    """Rotate the right (green) face counterclockwise."""
+    colors['green'] = rotate_face_90_counterclockwise(colors['green'])
+
+    temp_yellow_col = [row[2] for row in colors['yellow']]
+    temp_red_col = [row[2] for row in colors['red']]
+    temp_white_col = [row[2] for row in colors['white']]
+    temp_orange_col = [row[0] for row in colors['orange']]
+
+    for i in range(3):
+        colors['yellow'][i][2] = temp_red_col[i]
+        colors['red'][i][2] = temp_white_col[i]
+        colors['white'][i][2] = temp_orange_col[i]
+        colors['orange'][i][0] = temp_yellow_col[2 - i]
+
 
 def tf_ccw(colors):
-    temp_yellowface = colors.get('yellow')
-    temp_redface = colors.get('red')
-    temp_greenface = colors.get('green')
-    temp_orangeface = colors.get('orange')
-    temp_blueface = colors.get('blue')
+    """Rotate the top (yellow) face counterclockwise."""
+    colors['yellow'] = rotate_face_90_counterclockwise(colors['yellow'])
 
-    # Rotate the top face counterclockwise
-    for r in range(3):
-        for c in range(3):
-            temp_yellowface[r][c] = colors.get('yellow')[c][3-1-r]
+    temp_red_row = colors['red'][0]
+    temp_green_row = colors['green'][0]
+    temp_orange_row = colors['orange'][0]
+    temp_blue_row = colors['blue'][0]
 
-    # Adjust adjacent faces
-    temp_red_row = [colors['red'][0][c] for c in range(3)]
-    temp_blue_row = [colors['blue'][0][c] for c in range(3)]
-    temp_orange_row = [colors['orange'][0][c] for c in range(3)]
-    temp_green_row = [colors['green'][0][c] for c in range(3)]
+    colors['red'][0] = temp_green_row
+    colors['green'][0] = temp_orange_row
+    colors['orange'][0] = temp_blue_row
+    colors['blue'][0] = temp_red_row
 
-    for c in range(3):
-        colors['red'][0][c] = temp_green_row[c]
-        colors['green'][0][c] = temp_orange_row[c]
-        colors['orange'][0][c] = temp_blue_row[c]
-        colors['blue'][0][c] = temp_red_row[c]
-
-    # Update the top face
-    for r in range(3):
-        for c in range(3):
-            colors['yellow'][r][c] = temp_yellowface[r][c]
 
 def bof_ccw(colors):
-    temp_whiteface = colors.get('white')
-    temp_redface = colors.get('red')
-    temp_greenface = colors.get('green')
-    temp_orangeface = colors.get('orange')
-    temp_blueface = colors.get('blue')
+    """Rotate the bottom (white) face counterclockwise."""
+    colors['white'] = rotate_face_90_counterclockwise(colors['white'])
 
-    # Rotate the bottom face counterclockwise
-    for r in range(3):
-        for c in range(3):
-            temp_whiteface[r][c] = colors.get('white')[c][3-1-r]
+    temp_red_row = colors['red'][2]
+    temp_blue_row = colors['blue'][2]
+    temp_orange_row = colors['orange'][2]
+    temp_green_row = colors['green'][2]
 
-    # Adjust adjacent faces
-    temp_red_row = [colors['red'][2][c] for c in range(3)]
-    temp_blue_row = [colors['blue'][2][c] for c in range(3)]
-    temp_orange_row = [colors['orange'][2][c] for c in range(3)]
-    temp_green_row = [colors['green'][2][c] for c in range(3)]
-
-    for c in range(3):
-        colors['red'][2][c] = temp_blue_row[c]
-        colors['green'][2][c] = temp_red_row[c]
-        colors['orange'][2][c] = temp_green_row[c]
-        colors['blue'][2][c] = temp_orange_row[c]
-
-    # Update the bottom face
-    for r in range(3):
-        for c in range(3):
-            colors['white'][r][c] = temp_whiteface[r][c]
+    colors['red'][2] = temp_blue_row
+    colors['blue'][2] = temp_orange_row
+    colors['orange'][2] = temp_green_row
+    colors['green'][2] = temp_red_row
 
 if __name__ == '__main__':
     app.run(debug=True)
