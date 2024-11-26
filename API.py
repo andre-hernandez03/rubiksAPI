@@ -668,42 +668,42 @@ def apply_scramble(colors, scramble):
         if move == "F":
             ff(colors)
         elif move == "F'":
-            ff_counter(colors)
+            ff_ccw(colors)
         elif move == "F2":
             ff(colors)
             ff(colors)
         elif move == "B":
             bf(colors)
         elif move == "B'":
-            bf_counter(colors)
+            bf_ccw(colors)
         elif move == "B2":
             bf(colors)
             bf(colors)
         elif move == "L":
             lf(colors)
         elif move == "L'":
-            lf_counter(colors)
+            lf_ccw(colors)
         elif move == "L2":
             lf(colors)
             lf(colors)
         elif move == "R":
             rf(colors)
         elif move == "R'":
-            rf_counter(colors)
+            rf_ccw(colors)
         elif move == "R2":
             rf(colors)
             rf(colors)
         elif move == "U":
             tf(colors)
         elif move == "U'":
-            tf_counter(colors)
+            tf_ccw(colors)
         elif move == "U2":
             tf(colors)
             tf(colors)
         elif move == "D":
             bof(colors)
         elif move == "D'":
-            bof_counter(colors)
+            bof_ccw(colors)
         elif move == "D2":
             bof(colors)
             bof(colors)
@@ -711,6 +711,8 @@ def apply_scramble(colors, scramble):
 
 @app.route('/scramble',methods=['POST'])
 def scramble():
+    data = request.get_json()
+    colors = data.get("colors")
     create_scramble()
     apply_scramble(colors,scramble)
     img_buf = render_rubiks_cube(colors)
