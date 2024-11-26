@@ -249,8 +249,7 @@ def rotate():
     img_buf = render_rubiks_cube(colors)
     img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
     return jsonify({
-        'colors': colors,
-        'image': send_file(img_base64, mimetype='image/png')
+        'colors': colors
     }), 200
 
 
