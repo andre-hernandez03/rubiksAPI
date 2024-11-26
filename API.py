@@ -713,7 +713,7 @@ def apply_scramble(colors, scramble):
 def scramble():
     data = request.get_json()
     colors = data.get("colors")
-    create_scramble()
+    scramble = create_scramble()
     apply_scramble(colors,scramble)
     img_buf = render_rubiks_cube(colors)
     img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
