@@ -516,17 +516,20 @@ def rf(colors):
 
 def tf(colors):
     """Rotate the top (yellow) face clockwise."""
+    # Rotate the yellow face (top face) clockwise
     colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
 
+    # Store the top rows of adjacent faces
     temp_red_row = colors['red'][0]
     temp_blue_row = colors['blue'][0]
     temp_orange_row = colors['orange'][0]
     temp_green_row = colors['green'][0]
 
-    colors['red'][0] = temp_blue_row
-    colors['green'][0] = temp_red_row
-    colors['orange'][0] = temp_green_row
-    colors['blue'][0] = temp_orange_row
+    # Update the top rows
+    colors['red'][0] = temp_blue_row  # Top row of red gets top row of blue
+    colors['blue'][0] = temp_orange_row  # Top row of blue gets top row of orange
+    colors['orange'][0] = temp_green_row  # Top row of orange gets top row of green
+    colors['green'][0] = temp_red_row  # Top row of green gets top row of red
 
 
 def bof(colors):
@@ -614,17 +617,20 @@ def rf_ccw(colors):
 
 def tf_ccw(colors):
     """Rotate the top (yellow) face counterclockwise."""
+    # Rotate the yellow face (top face) counterclockwise
     colors['yellow'] = rotate_face_90_counterclockwise(colors['yellow'])
 
+    # Store the top rows of adjacent faces
     temp_red_row = colors['red'][0]
     temp_green_row = colors['green'][0]
     temp_orange_row = colors['orange'][0]
     temp_blue_row = colors['blue'][0]
 
-    colors['red'][0] = temp_green_row
-    colors['green'][0] = temp_orange_row
-    colors['orange'][0] = temp_blue_row
-    colors['blue'][0] = temp_red_row
+    # Update the top rows
+    colors['red'][0] = temp_green_row  # Top row of red gets top row of green
+    colors['green'][0] = temp_orange_row  # Top row of green gets top row of orange
+    colors['orange'][0] = temp_blue_row  # Top row of orange gets top row of blue
+    colors['blue'][0] = temp_red_row  # Top row of blue gets top row of red
 
 
 def bof_ccw(colors):
