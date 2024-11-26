@@ -470,48 +470,48 @@ def bf(colors):
     colors['orange'] = rotate_face_90_clockwise(colors['orange'])
 
     temp_yellow_row = colors['yellow'][0]
-    temp_green_col = [row[2] for row in colors['green']]
-    temp_white_row = colors['white'][2]
     temp_blue_col = [row[0] for row in colors['blue']]
+    temp_white_row = colors['white'][2]
+    temp_green_col = [row[2] for row in colors['green']]
 
     colors['yellow'][0] = temp_blue_col[::-1]
     for i in range(3):
-        colors['green'][i][2] = temp_yellow_row[i]
+        colors['blue'][i][0] = temp_white_row[i]
     colors['white'][2] = temp_green_col[::-1]
     for i in range(3):
-        colors['blue'][i][0] = temp_white_row[i]
+        colors['green'][i][2] = temp_yellow_row[i]
 
 
 def lf(colors):
     """Rotate the left (blue) face clockwise."""
     colors['blue'] = rotate_face_90_clockwise(colors['blue'])
 
-    temp_white_col = [row[0] for row in colors['white']]
+    temp_yellow_col = [row[0] for row in colors['yellow']]
     temp_red_col = [row[0] for row in colors['red']]
-    temp_yellow_col = [row[0] for row in colors['yellow']][::-1]
+    temp_white_col = [row[0] for row in colors['white']]
     temp_orange_col = [row[2] for row in colors['orange']]
 
     for i in range(3):
-        colors['white'][i][0] = temp_orange_col[i]
-        colors['red'][i][0] = temp_white_col[i]
-        colors['yellow'][2 - i][0] = temp_red_col[i]
-        colors['orange'][i][2] = temp_yellow_col[i]
+        colors['red'][i][0] = temp_yellow_col[i]
+        colors['white'][i][0] = temp_red_col[i]
+        colors['orange'][i][2] = temp_white_col[i]
+        colors['yellow'][i][0] = temp_orange_col[2 - i]
 
 
 def rf(colors):
     """Rotate the right (green) face clockwise."""
     colors['green'] = rotate_face_90_clockwise(colors['green'])
 
+    temp_yellow_col = [row[2] for row in colors['yellow']]
+    temp_orange_col = [row[0] for row in colors['orange']]
     temp_white_col = [row[2] for row in colors['white']]
     temp_red_col = [row[2] for row in colors['red']]
-    temp_yellow_col = [row[2] for row in colors['yellow']][::-1]
-    temp_orange_col = [row[0] for row in colors['orange']]
 
     for i in range(3):
-        colors['white'][i][2] = temp_red_col[i]
         colors['red'][i][2] = temp_yellow_col[i]
-        colors['yellow'][2 - i][2] = temp_orange_col[i]
+        colors['white'][i][2] = temp_red_col[i]
         colors['orange'][i][0] = temp_white_col[i]
+        colors['yellow'][i][2] = temp_orange_col[2 - i]
 
 
 def tf(colors):
