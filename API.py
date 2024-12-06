@@ -707,6 +707,7 @@ def apply_scramble(colors, scramble):
         elif move == "D2":
             bof(colors)
             bof(colors)
+    print(scramble_moves)
     return colors
 
 @app.route('/scramble',methods=['POST'])
