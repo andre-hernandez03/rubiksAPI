@@ -349,7 +349,7 @@ def apply_scramble(colors, scramble):
             bof(colors)
         elif move == "D'":
             bof_ccw(colors)
-    print(scramble_moves)
+    #print(scramble_moves)
     return colors
 
 @app.route('/scramble',methods=['POST'])
@@ -357,6 +357,7 @@ def scramble():
     data = request.get_json()
     colors = data.get("colors")
     scramble = create_scramble()
+    print(scramble)
     apply_scramble(colors,scramble)
     return jsonify({
         'colors': colors
