@@ -313,15 +313,15 @@ def bf(colors):
     # Cycle:
     # Blue left column becomes A (direct)
     for i in range(3):
-        colors['blue'][i][0] = A[::-1][i]
+        colors['blue'][i][0] = A[i]
     # White bottom row becomes reversed(original D)
-    for i in range(3):
-        colors['white'][2] = D[i]
+    colors['white'][2] = D[::-1]
     # Green right column becomes C (direct)
     for i in range(3):
-        colors['green'][i][2] = C[::-1][i]
+        colors['green'][i][2] = C[i]
     # Yellow top row becomes reversed(original B)
     colors['yellow'][0] = B[::-1]
+
 
 def rf(colors):
     """Rotate the right (green) face clockwise.
