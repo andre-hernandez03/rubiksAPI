@@ -376,8 +376,6 @@ def scramble():
     colors = data.get("colors")
     scramble = create_scramble()
     apply_scramble(colors,scramble)
-    #img_buf = render_rubiks_cube(colors)
-    #img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
     return jsonify({
         'colors': colors
     }), 200
