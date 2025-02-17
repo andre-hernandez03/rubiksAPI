@@ -356,7 +356,7 @@ def rf(colors):
         colors['red'][i][2] = C[i]
     # Yellow right column becomes reversed(original D)
     for i in range(3):
-        colors['yellow'][i][2] = D[::-1][i]
+        colors['yellow'][i][2] = D[i]
 
 def lf(colors):
     """Rotate the left (blue) face clockwise.
