@@ -252,117 +252,12 @@ def rotate():
         'colors': colors
     }), 200
 
-def rotate_face_90_clockwise(face):
-    """Rotate a 3x3 face 90 degrees clockwise."""
-    return [list(reversed(col)) for col in zip(*face)]
-
 
 def rotate_face_90_counterclockwise(face):
     """Rotate a 3x3 face 90 degrees counterclockwise."""
     return rotate_face_90_clockwise(rotate_face_90_clockwise(rotate_face_90_clockwise(face)))
 
-'''
-def ff(colors):
-    """Rotate the front (red) face clockwise."""
-    # Rotate the red face (front) clockwise
-    colors['red'] = rotate_face_90_clockwise(colors['red'])
 
-    # Temporary values for adjacent faces
-    temp_yellow_row = colors['yellow'][2]  # Bottom row of yellow (top face)
-    temp_green_col = [row[0] for row in colors['green']]  # First column of green (right face)
-    temp_white_row = colors['white'][0]  # Top row of white (bottom face)
-    temp_blue_col = [row[2] for row in colors['blue']]  # Third column of blue (left face)
-
-    # Update adjacent faces
-    for i in range(3):
-        colors['green'][i][0] = temp_yellow_row[i]  # First column of green gets bottom row of yellow
-    colors['white'][0] = temp_green_col[::-1]  # Top row of white gets reversed first column of green
-    for i in range(3):
-        colors['blue'][i][2] = temp_white_row[i]  # Third column of blue gets top row of white
-    colors['yellow'][2] = temp_blue_col[::-1]  # Bottom 
-
-
-def bf(colors):
-    """Rotate the back (orange) face clockwise."""
-    colors['orange'] = rotate_face_90_clockwise(colors['orange'])
-
-    temp_yellow_row = colors['yellow'][0]
-    temp_blue_col = [row[0] for row in colors['blue']]
-    temp_white_row = colors['white'][2]
-    temp_green_col = [row[2] for row in colors['green']]
-
-    colors['yellow'][0] = temp_blue_col[::-1]
-    for i in range(3):
-        colors['blue'][i][0] = temp_white_row[i]
-    colors['white'][2] = temp_green_col[::-1]
-    for i in range(3):
-        colors['green'][i][2] = temp_yellow_row[i]
-
-
-def lf(colors):
-    """Rotate the left (blue) face clockwise."""
-    colors['blue'] = rotate_face_90_clockwise(colors['blue'])
-
-    temp_yellow_col = [row[0] for row in colors['yellow']]
-    temp_red_col = [row[0] for row in colors['red']]
-    temp_white_col = [row[0] for row in colors['white']]
-    temp_orange_col = [row[2] for row in colors['orange']]
-
-    for i in range(3):
-        colors['red'][i][0] = temp_yellow_col[i]
-        colors['white'][i][0] = temp_red_col[i]
-        colors['orange'][i][2] = temp_white_col[i]
-        colors['yellow'][i][0] = temp_orange_col[2 - i]
-
-
-def rf(colors):
-    """Rotate the right (green) face clockwise."""
-    colors['green'] = rotate_face_90_clockwise(colors['green'])
-
-    temp_yellow_col = [row[2] for row in colors['yellow']]
-    temp_orange_col = [row[0] for row in colors['orange']]
-    temp_white_col = [row[2] for row in colors['white']]
-    temp_red_col = [row[2] for row in colors['red']]
-
-    for i in range(3):
-        colors['red'][i][2] = temp_yellow_col[i]
-        colors['white'][i][2] = temp_red_col[i]
-        colors['orange'][i][0] = temp_white_col[i]
-        colors['yellow'][i][2] = temp_orange_col[2 - i]
-
-
-def tf(colors):
-    """Rotate the top (yellow) face clockwise."""
-    # Rotate the yellow face (top face) clockwise
-    colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
-
-    # Store the top rows of adjacent faces
-    temp_red_row = colors['red'][0]
-    temp_blue_row = colors['blue'][0]
-    temp_orange_row = colors['orange'][0]
-    temp_green_row = colors['green'][0]
-
-    # Update the top rows
-    colors['red'][0] = temp_blue_row  # Top row of red gets top row of blue
-    colors['blue'][0] = temp_orange_row  # Top row of blue gets top row of orange
-    colors['orange'][0] = temp_green_row  # Top row of orange gets top row of green
-    colors['green'][0] = temp_red_row  # Top row of green gets top row of red
-
-
-def bof(colors):
-    """Rotate the bottom (white) face clockwise."""
-    colors['white'] = rotate_face_90_clockwise(colors['white'])
-
-    temp_red_row = colors['red'][2]
-    temp_green_row = colors['green'][2]
-    temp_orange_row = colors['orange'][2]
-    temp_blue_row = colors['blue'][2]
-
-    colors['red'][2] = temp_green_row
-    colors['green'][2] = temp_orange_row
-    colors['orange'][2] = temp_blue_row
-    colors['blue'][2] = temp_red_row
-'''
 def rotate_face_90_clockwise(face):
     """Rotate a 3x3 face (a list of 3 lists) 90° clockwise."""
     return [list(reversed(col)) for col in zip(*face)]
