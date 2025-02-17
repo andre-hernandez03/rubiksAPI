@@ -563,7 +563,7 @@ def ff_ccw(colors):
         colors['green'][i][2] = temp_white_row[i]
     colors['white'][0] = temp_blue_col[::-1]
     for i in range(3):
-        colors['blue'][i][0] = temp_yellow_row[i]
+        colors['blue'][i][2] = temp_yellow_row[i]
 
 
 def bf_ccw(colors):
