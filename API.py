@@ -313,12 +313,12 @@ def bf(colors):
     # Cycle:
     # Blue left column becomes A (direct)
     for i in range(3):
-        colors['blue'][i][0] = A[i]
+        colors['blue'][i][0] = A[::-1][i]
     # White bottom row becomes reversed(original D)
     colors['white'][2] = D[::-1]
     # Green right column becomes C (direct)
     for i in range(3):
-        colors['green'][i][2] = C[i]
+        colors['green'][i][2] = C[::-1][i]
     # Yellow top row becomes reversed(original B)
     colors['yellow'][0] = B[::-1]
 
