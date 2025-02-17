@@ -393,7 +393,7 @@ def ff(colors):
         colors['blue'][i][2] = temp_white_row[i]          # Blue right column <- White top row
     colors['yellow'][2] = temp_blue_col[::-1]             # Yellow bottom row <- (reversed) Blue right column
 
-def bb(colors):
+def bf(colors):
     """Rotate the back (orange) face clockwise.
     
     Here we use the following adjacent edges (according to our convention):
@@ -500,7 +500,7 @@ def tf(colors):
       - Green’s top row-> Orange’s top row
       - Orange’s top row-> Blue’s top row
     """
-    colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
+    colors['yellow'] = rotate_face_90_counterclockwise(colors['yellow'])
     
     # Make copies of the affected rows.
     temp_red = colors['red'][0].copy()
