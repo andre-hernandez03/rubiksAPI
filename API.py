@@ -360,7 +360,8 @@ def scramble():
     print(scramble)
     apply_scramble(colors,scramble)
     return jsonify({
-        'colors': colors
+        'colors': colors,
+        'scramble': scramble
     }), 200
 
 if __name__ == '__main__':
