@@ -136,6 +136,7 @@ def rotate_face_90_clockwise(face):
 def rotate_face_90_counterclockwise(face):
     return rotate_face_90_clockwise(rotate_face_90_clockwise(rotate_face_90_clockwise(face)))
 
+'''
 def flip_columns(face):
     return [row[::-1] for row in face]
 
@@ -211,7 +212,7 @@ def render_cube_endpoint():
     print(colors)
     img_buf = render_rubiks_cube(colors)
     return send_file(img_buf, mimetype='image/png')
-
+'''
 # ROTATIONS
 
 @app.route('/rot', methods=['POST']) 
