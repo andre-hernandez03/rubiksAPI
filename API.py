@@ -360,103 +360,36 @@ def bof(colors):
 
 # COUNTER CLOCKWISE ROTATIONS
 
-def ff_ccw(colors):
-    """Rotate the front (red) face counterclockwise."""
-    colors['red'] = rotate_face_90_counterclockwise(colors['red'])
+def ffc(colors):
+    """Rotate the front (red) face 90° counterclockwise."""
+    for _ in range(3):
+        ff(colors)
 
-    temp_yellow_row = colors['yellow'][2]
-    temp_blue_col = [row[2] for row in colors['blue']]
-    temp_white_row = colors['white'][0]
-    temp_green_col = [row[0] for row in colors['green']]
+def bfc(colors):
+    """Rotate the back (orange) face 90° counterclockwise."""
+    for _ in range(3):
+        bf(colors)
 
-    colors['yellow'][2] = temp_green_col[::-1]
-    for i in range(3):
-        colors['green'][i][2] = temp_white_row[i]
-    colors['white'][0] = temp_blue_col[::-1]
-    for i in range(3):
-        colors['blue'][i][2] = temp_yellow_row[i]
+def rfc(colors):
+    """Rotate the right (green) face 90° counterclockwise."""
+    for _ in range(3):
+        rf(colors)
 
+def lfc(colors):
+    """Rotate the left (blue) face 90° counterclockwise."""
+    for _ in range(3):
+        lf(colors)
 
-def bf_ccw(colors):
-    """Rotate the back (orange) face counterclockwise."""
-    colors['orange'] = rotate_face_90_counterclockwise(colors['orange'])
+def tfc(colors):
+    """Rotate the top (yellow) face 90° counterclockwise."""
+    for _ in range(3):
+        tf(colors)
 
-    temp_yellow_row = colors['yellow'][0]
-    temp_green_col = [row[2] for row in colors['green']]
-    temp_white_row = colors['white'][2]
-    temp_blue_col = [row[0] for row in colors['blue']]
+def bofc(colors):
+    """Rotate the bottom (white) face 90° counterclockwise."""
+    for _ in range(3):
+        bof(colors)
 
-    colors['yellow'][0] = temp_green_col[::-1]
-    for i in range(3):
-        colors['green'][i][2] = temp_white_row[i]
-    colors['white'][2] = temp_blue_col[::-1]
-    for i in range(3):
-        colors['blue'][i][0] = temp_yellow_row[i]
-
-
-def lf_ccw(colors):
-    """Rotate the left (blue) face counterclockwise."""
-    colors['blue'] = rotate_face_90_counterclockwise(colors['blue'])
-
-    temp_yellow_col = [row[0] for row in colors['yellow']]
-    temp_orange_col = [row[2] for row in colors['orange']]
-    temp_white_col = [row[0] for row in colors['white']]
-    temp_red_col = [row[0] for row in colors['red']]
-
-    for i in range(3):
-        colors['yellow'][i][0] = temp_red_col[i]
-        colors['orange'][i][2] = temp_yellow_col[2 - i]
-        colors['white'][i][0] = temp_orange_col[i]
-        colors['red'][i][0] = temp_white_col[i]
-
-
-def rf_ccw(colors):
-    """Rotate the right (green) face counterclockwise."""
-    colors['green'] = rotate_face_90_counterclockwise(colors['green'])
-
-    temp_yellow_col = [row[2] for row in colors['yellow']]
-    temp_red_col = [row[2] for row in colors['red']]
-    temp_white_col = [row[2] for row in colors['white']]
-    temp_orange_col = [row[0] for row in colors['orange']]
-
-    for i in range(3):
-        colors['yellow'][i][2] = temp_red_col[i]
-        colors['red'][i][2] = temp_white_col[i]
-        colors['white'][i][2] = temp_orange_col[i]
-        colors['orange'][i][0] = temp_yellow_col[2 - i]
-
-
-def tf_ccw(colors):
-    """Rotate the top (yellow) face counterclockwise."""
-    # Rotate the yellow face (top face) counterclockwise
-    colors['yellow'] = rotate_face_90_counterclockwise(colors['yellow'])
-
-    # Store the top rows of adjacent faces
-    temp_red_row = colors['red'][0]
-    temp_green_row = colors['green'][0]
-    temp_orange_row = colors['orange'][0]
-    temp_blue_row = colors['blue'][0]
-
-    # Update the top rows
-    colors['red'][0] = temp_green_row  # Top row of red gets top row of green
-    colors['green'][0] = temp_orange_row  # Top row of green gets top row of orange
-    colors['orange'][0] = temp_blue_row  # Top row of orange gets top row of blue
-    colors['blue'][0] = temp_red_row  # Top row of blue gets top row of red
-
-
-def bof_ccw(colors):
-    """Rotate the bottom (white) face counterclockwise."""
-    colors['white'] = rotate_face_90_counterclockwise(colors['white'])
-
-    temp_red_row = colors['red'][2]
-    temp_blue_row = colors['blue'][2]
-    temp_orange_row = colors['orange'][2]
-    temp_green_row = colors['green'][2]
-
-    colors['red'][2] = temp_blue_row
-    colors['blue'][2] = temp_orange_row
-    colors['orange'][2] = temp_green_row
-    colors['green'][2] = temp_red_row
 
 def create_scramble():
     """Generate a scramble sequence for a Rubik's Cube with random moves."""
