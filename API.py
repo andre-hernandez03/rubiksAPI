@@ -220,7 +220,7 @@ def rf(colors):
     # Cycle:
     # Orange left column becomes A (direct)
     for i in range(3):
-        colors['orange'][i][0] = A[i]
+        colors['orange'][i][0] = A[::-1][i]
     # White right column becomes reversed(original B)
     for i in range(3):
         colors['white'][i][2] = B[::-1][i]
