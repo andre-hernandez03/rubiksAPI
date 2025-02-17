@@ -360,32 +360,32 @@ def bof(colors):
 
 # COUNTER CLOCKWISE ROTATIONS
 
-def ffc(colors):
+def ff_ccw(colors):
     """Rotate the front (red) face 90° counterclockwise."""
     for _ in range(3):
         ff(colors)
 
-def bfc(colors):
+def bf_ccw(colors):
     """Rotate the back (orange) face 90° counterclockwise."""
     for _ in range(3):
         bf(colors)
 
-def rfc(colors):
+def rf_ccw(colors):
     """Rotate the right (green) face 90° counterclockwise."""
     for _ in range(3):
         rf(colors)
 
-def lfc(colors):
+def lf_ccw(colors):
     """Rotate the left (blue) face 90° counterclockwise."""
     for _ in range(3):
         lf(colors)
 
-def tfc(colors):
+def tf_ccw(colors):
     """Rotate the top (yellow) face 90° counterclockwise."""
     for _ in range(3):
         tf(colors)
 
-def bofc(colors):
+def bof_ccw(colors):
     """Rotate the bottom (white) face 90° counterclockwise."""
     for _ in range(3):
         bof(colors)
