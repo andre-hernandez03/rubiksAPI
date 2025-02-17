@@ -291,64 +291,72 @@ def ff(colors):
 def bf(colors):
     """Rotate the back (orange) face clockwise.
     
-    Here we use the following adjacent edges (according to our convention):
-      - Yellow’s top row (up back edge)
-      - Green’s right column (right back edge)
-      - White’s bottom row (down back edge)
-      - Blue’s left column (left back edge)
-      
-    The cycle is performed (direct, then reversed on every second transfer):
-      - Green right column <- Yellow top row (direct)
-      - White bottom row <- (reversed) Green right column
-      - Blue left column  <- White bottom row (direct)
-      - Yellow top row   <- (reversed) Blue left column
+    When viewing the back face head‑on, its adjacent edges (clockwise) are:
+      A: Up (yellow) top row  
+      B: Right (green) right column  
+      C: Down (white) bottom row  
+      D: Left (blue) left column
+    
+    Cycle pattern (using the same idea):
+      D ← A (direct)
+      C ← reversed(D)
+      B ← C (direct)
+      A ← reversed(B)
     """
     colors['orange'] = rotate_face_90_clockwise(colors['orange'])
     
-    temp_yellow = colors['yellow'][0]                    # Yellow’s top row
-    temp_green = [row[2] for row in colors['green']]      # Green’s right column
-    temp_white = colors['white'][2]                       # White’s bottom row
-    temp_blue = [row[0] for row in colors['blue']]        # Blue’s left column
-    
+    A = colors['yellow'][0].copy()              # yellow top row
+    B = [row[2] for row in colors['green']]      # green right column
+    C = colors['white'][2].copy()               # white bottom row
+    D = [row[0] for row in colors['blue']]       # blue left column
+
+    # Cycle:
+    # Blue left column becomes A (direct)
     for i in range(3):
-        colors['green'][i][2] = temp_yellow[i]           # Green right column <- Yellow top row
-    colors['white'][2] = temp_green[::-1]                # White bottom row <- reversed Green right column
+        colors['blue'][i][0] = A[i]
+    # White bottom row becomes reversed(original D)
+    colors['white'][2] = D[::-1]
+    # Green right column becomes C (direct)
     for i in range(3):
-        colors['blue'][i][0] = temp_white[i]             # Blue left column  <- White bottom row
-    colors['yellow'][0] = temp_blue[::-1]                # Yellow top row   <- reversed Blue left column
+        colors['green'][i][2] = C[i]
+    # Yellow top row becomes reversed(original B)
+    colors['yellow'][0] = B[::-1]
 
 def rf(colors):
-    """Rotate the right (green) face clockwise (corrected).
+    """Rotate the right (green) face clockwise.
     
-    Standard R move (using our faces):
-      - Up (yellow) right column → Front (red) right column
-      - Front (red) right column → Down (white) right column
-      - Down (white) right column → Back (orange) left column (and needs to be reversed)
-      - Back (orange) left column (reversed) → Up (yellow) right column
+    When viewing the right face head‑on, its adjacent edges (clockwise) are:
+      A: Up (yellow) right column  
+      B: Back (orange) left column  
+      C: Down (white) right column  
+      D: Front (red) right column
+    
+    We use the same cycle pattern as for ff:
+      B ← A (direct)
+      C ← reversed(B)
+      D ← C (direct)
+      A ← reversed(D)
     """
     colors['green'] = rotate_face_90_clockwise(colors['green'])
     
-    # Save U's right column.
-    temp_up = [row[2] for row in colors['yellow']]
-    
-    # U’s right column ← reversed(B’s left column)
-    orange_left = [row[0] for row in colors['orange']]
+    A = [row[2] for row in colors['yellow']]  # yellow right column
+    B = [row[0] for row in colors['orange']]    # orange left column
+    C = [row[2] for row in colors['white']]     # white right column
+    D = [row[2] for row in colors['red']]       # red right column
+
+    # Cycle:
+    # Orange left column becomes A (direct)
     for i in range(3):
-        colors['yellow'][i][2] = orange_left[::-1][i]
-    
-    # B’s (orange) left column ← reversed(D’s right column)
-    white_right = [row[2] for row in colors['white']]
+        colors['orange'][i][0] = A[i]
+    # White right column becomes reversed(original B)
     for i in range(3):
-        colors['orange'][i][0] = white_right[::-1][i]
-    
-    # D’s right column ← F’s (red) right column
-    red_right = [row[2] for row in colors['red']]
+        colors['white'][i][2] = B[::-1][i]
+    # Red right column becomes C (direct)
     for i in range(3):
-        colors['white'][i][2] = red_right[i]
-    
-    # F’s right column ← saved U’s right column.
+        colors['red'][i][2] = C[i]
+    # Yellow right column becomes reversed(original D)
     for i in range(3):
-        colors['red'][i][2] = temp_up[i]
+        colors['yellow'][i][2] = D[::-1][i]
 
 def lf(colors):
     """Rotate the left (blue) face clockwise.
