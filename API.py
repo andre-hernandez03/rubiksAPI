@@ -315,7 +315,7 @@ def bf(colors):
     for i in range(3):
         colors['blue'][i][0] = A[::-1][i]
     # White bottom row becomes reversed(original D)
-    for i range(3):
+    for i in range(3):
         colors['white'][2] = D[i]
     # Green right column becomes C (direct)
     for i in range(3):
