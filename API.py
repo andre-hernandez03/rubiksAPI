@@ -5,10 +5,7 @@ import base64
 from PIL import Image
 import numpy as np
 import cv2
-#import pyvista as pv
 import io
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import random
 
 
@@ -50,7 +47,6 @@ def detect():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-
 
 # convert image for opencv
 def convert_image(base64_str):
@@ -117,7 +113,6 @@ def detect_colors(image):
 
     return layout
     
-
 
 # Define the colors for each face of the cube
 COLOR_MAP = {
@@ -213,6 +208,7 @@ def render_cube_endpoint():
     img_buf = render_rubiks_cube(colors)
     return send_file(img_buf, mimetype='image/png')
 '''
+
 # ROTATIONS
 
 @app.route('/rot', methods=['POST']) 
@@ -247,41 +243,25 @@ def rotate():
             tf_ccw(colors)
         case __ :
             return
-    #img_buf = render_rubiks_cube(colors)
-    #img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
     return jsonify({
         'colors': colors
     }), 200
 
 
 def rotate_face_90_counterclockwise(face):
-    """Rotate a 3x3 face 90 degrees counterclockwise."""
     return rotate_face_90_clockwise(rotate_face_90_clockwise(rotate_face_90_clockwise(face)))
 
-
 def rotate_face_90_clockwise(face):
-    """Rotate a 3x3 face (a list of 3 lists) 90° clockwise."""
     return [list(reversed(col)) for col in zip(*face)]
 
 def ff(colors):
-    """Rotate the front (red) face clockwise.
-    
-    Adjacent faces are updated as follows:
-      - The bottom row of yellow (up) moves (directly) into the left column of green (right).
-      - The original left column of green is then placed (reversed) into the top row of white (down).
-      - The original top row of white is moved (directly) into the right column of blue (left).
-      - Finally, the original right column of blue is placed (reversed) into the bottom row of yellow.
-    """
-    # Rotate the red face itself.
     colors['red'] = rotate_face_90_clockwise(colors['red'])
     
-    # Store the adjacent edges.
     temp_yellow_row = colors['yellow'][2]               # Yellow’s bottom row (adjacent to front)
     temp_green_col = [row[0] for row in colors['green']]  # Green’s left column (adjacent to front)
     temp_white_row = colors['white'][0]                   # White’s top row (adjacent to front)
     temp_blue_col = [row[2] for row in colors['blue']]    # Blue’s right column (adjacent to front)
     
-    # Cycle the adjacent edges.
     for i in range(3):
         colors['green'][i][0] = temp_yellow_row[i]        # Green left column <- Yellow bottom row
     colors['white'][0] = temp_green_col[::-1]             # White top row <- (reversed) Green left column
@@ -290,20 +270,6 @@ def ff(colors):
     colors['yellow'][2] = temp_blue_col[::-1]             # Yellow bottom row <- (reversed) Blue right column
 
 def bf(colors):
-    """Rotate the back (orange) face clockwise with revised reversals.
-    
-    For the back face (orange), when viewed head-on the adjacent edges (clockwise) are:
-      A: Up (yellow) top row  
-      B: Right (green) right column  
-      C: Down (white) bottom row  
-      D: Left (blue) left column
-
-    Revised cycle:
-      - Blue left column ← reversed(A)
-      - White bottom row ← D (direct)
-      - Green right column ← reversed(C)
-      - Yellow top row ← B (direct)
-    """
     colors['orange'] = rotate_face_90_clockwise(colors['orange'])
     
     # Save adjacent edges.
@@ -328,20 +294,6 @@ def bf(colors):
     colors['yellow'][0] = B.copy()
 
 def rf(colors):
-    """Rotate the right (green) face clockwise.
-    
-    When viewing the right face head‑on, its adjacent edges (clockwise) are:
-      A: Up (yellow) right column  
-      B: Back (orange) left column  
-      C: Down (white) right column  
-      D: Front (red) right column
-    
-    We use the same cycle pattern as for ff:
-      B ← A (direct)
-      C ← reversed(B)
-      D ← C (direct)
-      A ← reversed(D)
-    """
     colors['green'] = rotate_face_90_clockwise(colors['green'])
     
     A = [row[2] for row in colors['yellow']]  # yellow right column
@@ -364,20 +316,6 @@ def rf(colors):
         colors['yellow'][i][2] = D[i]
 
 def lf(colors):
-    """Rotate the left (blue) face clockwise.
-    
-    For the left face the adjacent edges are:
-      - Yellow’s left column (up)
-      - Red’s left column (front)
-      - White’s left column (down)
-      - Orange’s right column (back; note the flipped orientation)
-      
-    The cycle is:
-      - Red left column   <- Yellow left column (direct)
-      - White left column <- Red left column (direct)
-      - Orange right column<- (reversed) White left column
-      - Yellow left column<- (reversed) Orange right column
-    """
     colors['blue'] = rotate_face_90_clockwise(colors['blue'])
     
     temp_up = [row[0] for row in colors['yellow']]      # Yellow’s left column
@@ -395,45 +333,22 @@ def lf(colors):
         colors['yellow'][i][0] = temp_orange[::-1][i]     # Yellow left column <- (reversed) Orange right column
 
 def tf(colors):
-    """Rotate the up (yellow) face clockwise.
-    
-    The up face is surrounded by the top edges of the four side faces.
-    In our convention:
-      - Red’s top row (front)
-      - Green’s top row (right)
-      - Orange’s top row (back)
-      - Blue’s top row (left)
-    
-    When viewed from above, a clockwise rotation moves:
-      - Blue’s top row -> Red’s top row
-      - Red’s top row  -> Green’s top row
-      - Green’s top row-> Orange’s top row
-      - Orange’s top row-> Blue’s top row
-    """
     colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
     
-    # Make copies of the affected rows.
-    temp_red = colors['red'][0].copy()
-    temp_green = colors['green'][0].copy()
-    temp_orange = colors['orange'][0].copy()
-    temp_blue = colors['blue'][0].copy()
-    
-    # Cycle the edges (no reversal needed, as all are in the same orientation).
-    colors['red'][0] = temp_blue      # Red top row <- Blue top row
-    colors['green'][0] = temp_red     # Green top row <- Red top row
-    colors['orange'][0] = temp_green  # Orange top row <- Green top row
-    colors['blue'][0] = temp_orange   # Blue top row <- Orange top row
+    # Save copies of the top rows of the four adjacent faces.
+    temp_red = colors['red'][0].copy()       # Front (red) top row
+    temp_green = colors['green'][0].copy()     # Right (green) top row
+    temp_orange = colors['orange'][0].copy()   # Back (orange) top row
+    temp_blue = colors['blue'][0].copy()       # Left (blue) top row
+
+    # Cycle the edges in the clockwise direction.
+    colors['red'][0] = temp_green            # Front gets Right
+    colors['green'][0] = temp_orange         # Right gets Back
+    colors['orange'][0] = temp_blue          # Back gets Left
+    colors['blue'][0] = temp_red             # Left gets Front
+
 
 def bof(colors):
-    """Rotate the down (white) face clockwise (corrected).
-    
-    In our net the four side faces around white are:
-      Front = red, Right = green, Back = orange, Left = blue.
-      
-    For a D move (when white is the down face) the standard cycle (when viewed from below)
-    is:
-      red bottom row → blue bottom row → orange bottom row → green bottom row → red bottom row.
-    """
     colors['white'] = rotate_face_90_clockwise(colors['white'])
     
     temp = colors['red'][2].copy()
