@@ -501,7 +501,6 @@ def tf(colors):
       - Orange’s top row-> Blue’s top row
     """
     colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
-    colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
     
     # Make copies of the affected rows.
     temp_red = colors['red'][0].copy()
@@ -516,33 +515,13 @@ def tf(colors):
     colors['blue'][0] = temp_orange   # Blue top row <- Orange top row
 
 def bof(colors):
-    """Rotate the down (white) face clockwise.
+   colors['white'] = rotate_face_90_clockwise(colors['white'])
     
-    The down face is adjacent to the bottom edges of the four side faces.
-    By our convention:
-      - Red’s bottom row (front)
-      - Green’s bottom row (right)
-      - Orange’s bottom row (back)
-      - Blue’s bottom row (left)
-    
-    A standard D move (clockwise when viewed from below) cycles these as:
-      Red bottom row   -> Green bottom row ->
-      Orange bottom row-> Blue bottom row -> (back to Red)
-    
-    (No reversal is needed since all these rows share the same left-to-right orientation.)
-    """
-    colors['white'] = rotate_face_90_clockwise(colors['white'])
-    
-    temp_red = colors['red'][2].copy()
-    temp_green = colors['green'][2].copy()
-    temp_orange = colors['orange'][2].copy()
-    temp_blue = colors['blue'][2].copy()
-    
-    colors['red'][2] = temp_green      # Red bottom row <- Green bottom row
-    colors['green'][2] = temp_orange   # Green bottom row <- Orange bottom row
-    colors['orange'][2] = temp_blue    # Orange bottom row <- Blue bottom row
-    colors['blue'][2] = temp_red       # Blue bottom row <- Red bottom row
-
+    temp = colors['red'][2].copy()
+    colors['red'][2]    = colors['blue'][2].copy()
+    colors['blue'][2]   = colors['orange'][2].copy()
+    colors['orange'][2] = colors['green'][2].copy()
+    colors['green'][2]  = temp
 
 
 
