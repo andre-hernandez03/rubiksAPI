@@ -5,10 +5,10 @@ import base64
 from PIL import Image
 import numpy as np
 import cv2
-import pyvista as pv
+#import pyvista as pv
 import io
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import random
 
 
