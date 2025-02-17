@@ -500,7 +500,8 @@ def tf(colors):
       - Green’s top row-> Orange’s top row
       - Orange’s top row-> Blue’s top row
     """
-    colors['yellow'] = rotate_face_90_counterclockwise(colors['yellow'])
+    colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
+    colors['yellow'] = rotate_face_90_clockwise(colors['yellow'])
     
     # Make copies of the affected rows.
     temp_red = colors['red'][0].copy()
