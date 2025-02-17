@@ -311,7 +311,7 @@ def create_scramble():
     """Generate a scramble sequence for a Rubik's Cube with random moves."""
     num_moves = random.randint(20, 60)  # Random number of moves between 20 and 60
     faces = ['F', 'B', 'L', 'R', 'U', 'D']  # Front, Back, Left, Right, Up, Down
-    modifiers = ['', "'", '2']  # '', ' means clockwise, "' means counterclockwise, '2' means double turn
+    modifiers = ['', "'"]  # '', ' means clockwise, "' means counterclockwise
     
     scramble = []
     for _ in range(num_moves):
@@ -329,44 +329,26 @@ def apply_scramble(colors, scramble):
             ff(colors)
         elif move == "F'":
             ff_ccw(colors)
-        elif move == "F2":
-            ff(colors)
-            ff(colors)
         elif move == "B":
             bf(colors)
         elif move == "B'":
             bf_ccw(colors)
-        elif move == "B2":
-            bf(colors)
-            bf(colors)
         elif move == "L":
             lf(colors)
         elif move == "L'":
             lf_ccw(colors)
-        elif move == "L2":
-            lf(colors)
-            lf(colors)
         elif move == "R":
             rf(colors)
         elif move == "R'":
             rf_ccw(colors)
-        elif move == "R2":
-            rf(colors)
-            rf(colors)
         elif move == "U":
             tf(colors)
         elif move == "U'":
             tf_ccw(colors)
-        elif move == "U2":
-            tf(colors)
-            tf(colors)
         elif move == "D":
             bof(colors)
         elif move == "D'":
             bof_ccw(colors)
-        elif move == "D2":
-            bof(colors)
-            bof(colors)
     print(scramble_moves)
     return colors
 
