@@ -289,39 +289,42 @@ def ff(colors):
     colors['yellow'][2] = temp_blue_col[::-1]             # Yellow bottom row <- (reversed) Blue right column
 
 def bf(colors):
-    """Rotate the back (orange) face clockwise.
+    """Rotate the back (orange) face clockwise with revised reversals.
     
-    When viewing the back face head‑on, its adjacent edges (clockwise) are:
+    For the back face (orange), when viewed head-on the adjacent edges (clockwise) are:
       A: Up (yellow) top row  
       B: Right (green) right column  
       C: Down (white) bottom row  
       D: Left (blue) left column
-    
-    Cycle pattern (using the same idea):
-      D ← A (direct)
-      C ← reversed(D)
-      B ← C (direct)
-      A ← reversed(B)
+
+    Revised cycle:
+      - Blue left column ← reversed(A)
+      - White bottom row ← D (direct)
+      - Green right column ← reversed(C)
+      - Yellow top row ← B (direct)
     """
     colors['orange'] = rotate_face_90_clockwise(colors['orange'])
     
+    # Save adjacent edges.
     A = colors['yellow'][0].copy()              # yellow top row
     B = [row[2] for row in colors['green']]      # green right column
-    C = colors['white'][2].copy()               # white bottom row
+    C = colors['white'][2].copy()                # white bottom row
     D = [row[0] for row in colors['blue']]       # blue left column
 
-    # Cycle:
-    # Blue left column becomes A (direct)
+    # Cycle the edges with swapped reversal:
+    # Blue left column becomes reversed(A)
     for i in range(3):
-        colors['blue'][i][0] = A[i]
-    # White bottom row becomes reversed(original D)
-    colors['white'][2] = D[::-1]
-    # Green right column becomes C (direct)
+        colors['blue'][i][0] = A[::-1][i]
+    
+    # White bottom row becomes D direct
+    colors['white'][2] = D.copy()
+    
+    # Green right column becomes reversed(C)
     for i in range(3):
-        colors['green'][i][2] = C[i]
-    # Yellow top row becomes reversed(original B)
-    colors['yellow'][0] = B[::-1]
-
+        colors['green'][i][2] = C[::-1][i]
+    
+    # Yellow top row becomes B direct
+    colors['yellow'][0] = B.copy()
 
 def rf(colors):
     """Rotate the right (green) face clockwise.
