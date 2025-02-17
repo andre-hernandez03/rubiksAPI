@@ -514,15 +514,23 @@ def tf(colors):
     colors['orange'][0] = temp_green  # Orange top row <- Green top row
     colors['blue'][0] = temp_orange   # Blue top row <- Orange top row
 
-def bof(colors):
-   colors['white'] = rotate_face_90_clockwise(colors['white'])
+def df(colors):
+    """Rotate the down (white) face clockwise (corrected).
+    
+    In our net the four side faces around white are:
+      Front = red, Right = green, Back = orange, Left = blue.
+      
+    For a D move (when white is the down face) the standard cycle (when viewed from below)
+    is:
+      red bottom row → blue bottom row → orange bottom row → green bottom row → red bottom row.
+    """
+    colors['white'] = rotate_face_90_clockwise(colors['white'])
     
     temp = colors['red'][2].copy()
     colors['red'][2]    = colors['blue'][2].copy()
     colors['blue'][2]   = colors['orange'][2].copy()
     colors['orange'][2] = colors['green'][2].copy()
     colors['green'][2]  = temp
-
 
 
 # COUNTER CLOCKWISE ROTATIONS
