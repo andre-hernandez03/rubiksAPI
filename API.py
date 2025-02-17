@@ -514,7 +514,7 @@ def tf(colors):
     colors['orange'][0] = temp_green  # Orange top row <- Green top row
     colors['blue'][0] = temp_orange   # Blue top row <- Orange top row
 
-def df(colors):
+def bof(colors):
     """Rotate the down (white) face clockwise (corrected).
     
     In our net the four side faces around white are:
