@@ -67,10 +67,7 @@ color_ranges = {
 '''
 
 color_ranges = {
-    'red': [
-        ((0, 120, 70), (10, 255, 255)),     # Lower red range
-        ((170, 120, 70), (180, 255, 255))   # Upper red range
-    ],
+    'red': [(0, 120, 70), (10, 255, 255)],
     'green':[(35,100,70),(85,255,255)],
     'blue': [(90,100,70),(130,255,255)],
     'yellow':[(25,120,70),(35,255,255)],
@@ -85,7 +82,7 @@ def classify_color(hsv_region):
     avg_saturation = np.mean(hsv_region[:, :, 1])
     avg_value = np.mean(hsv_region[:, :, 2])
 
-    '''
+    
     # Loop through color ranges and classify based on HSV value
     for color, (lower, upper) in color_ranges.items():
         lower_bound = np.array(lower)
@@ -93,19 +90,6 @@ def classify_color(hsv_region):
         if lower_bound[0] <= avg_hue <= upper_bound[0] and lower_bound[1] <= avg_saturation <= upper_bound[1] and lower_bound[2] <= avg_value <= upper_bound[2]:
             return color
     return 'white'  # If no color matches
-    '''
-    # Loop through each color and its range(s)
-    for color, ranges_list in color_ranges.items():
-        # ranges_list might be one or multiple (lower, upper) tuples
-        for (lower, upper) in ranges_list:
-            lower_bound = np.array(lower, dtype=np.float32)
-            upper_bound = np.array(upper, dtype=np.float32)
-            
-            if (lower_bound[0] <= avg_hue <= upper_bound[0] and 
-                lower_bound[1] <= avg_sat <= upper_bound[1] and 
-                lower_bound[2] <= avg_val <= upper_bound[2]):
-                return color
-    return 'white'  # Fallback if nothing matches
 
 # Function to detect Rubik's cube colors
 def detect_colors(image):
