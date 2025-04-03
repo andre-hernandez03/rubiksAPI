@@ -380,7 +380,7 @@ def scramble():
 
 @app.route('/kociemba',methods=['POST'])
 def k_algorithm():
-    data = request.get_jason()
+    data = request.get_json()
     colors = data.get("colors")
     solution = kociemba.solve(colors)
     return jsonify({
