@@ -382,7 +382,7 @@ def scramble():
 def k_algorithm():
     data = request.get_jason()
     colors = data.get("colors")
-    solution = kociemba(colors)
+    solution = kociemba.solve(colors)
     return jsonify({
         'solution': solution
     }), 200
