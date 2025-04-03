@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 import io
 import random
+import kociemba
 
 
 # Flask/ Server
@@ -376,6 +377,12 @@ def scramble():
         'colors': colors,
         'scramble': scramble
     }), 200
+
+@app.route('/kociemba',methods=['POST'])
+def k_algorithm():
+    data = request.get_jason()
+    colors = data.get("colors")
+    print(colors)
 
 if __name__ == '__main__':
     app.run(debug=True)
