@@ -171,7 +171,7 @@ def rotate():
             bof_ccw(colors)
         case "tfc" | "U'":
             tf_ccw(colors)
-        case "T2":
+        case "U2":
             tf(colors)
             tf(colors)
         case "F2":
