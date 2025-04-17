@@ -171,6 +171,24 @@ def rotate():
             bof_ccw(colors)
         case "tfc" | "U'":
             tf_ccw(colors)
+        case "T2":
+            tf(colors)
+            tf(colors)
+        case "F2":
+            ff(colors)
+            ff(colors)
+        case "B2":
+            bf(colors)
+            bf(colors)
+        case "D2":
+            bof(colors)
+            bof(colors)
+        case "L2":
+            lf(colors)
+            lf(colors)
+        case "R2":
+            rf(colors)
+            rf(colors)
         case __ :
             return
     return jsonify({
