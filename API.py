@@ -147,29 +147,29 @@ def rotate():
     colors = data.get("colors")
     rot = data.get("rot")
     match rot:
-        case "ff":
+        case "ff" | "F":
             ff(colors)
-        case "bf":
+        case "bf" | "B":
             bf(colors)
-        case "lf":
+        case "lf" | "L":
             lf(colors)
-        case "rf":
+        case "rf" | "R":
             rf(colors)
-        case "bof":
+        case "bof" | "D":
             bof(colors)
-        case "tf":
+        case "tf" | "U":
             tf(colors)
-        case "ffc":
+        case "ffc" | "F'":
             ff_ccw(colors)
-        case "bfc":
+        case "bfc" | "B'":
             bf_ccw(colors)
-        case "lfc":
+        case "lfc" | "L'":
             lf_ccw(colors)
-        case "rfc":
+        case "rfc" | "R'":
             rf_ccw(colors)
-        case "bofc":
+        case "bofc" | "D'":
             bof_ccw(colors)
-        case "tfc":
+        case "tfc" | "U'":
             tf_ccw(colors)
         case __ :
             return
