@@ -341,7 +341,7 @@ def bof_ccw(colors):
 
 def create_scramble():
     """Generate a scramble sequence for a Rubik's Cube with random moves."""
-    num_moves = random.randint(20, 30)  # Random number of moves between 20 and 60
+    num_moves = random.randint(30, 40)  # Random number of moves between 20 and 60
     faces = ['F', 'B', 'L', 'R', 'U', 'D']  # Front, Back, Left, Right, Up, Down
     modifiers = ['', "'"]  # '', ' means clockwise, "' means counterclockwise
     
